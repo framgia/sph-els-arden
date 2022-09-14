@@ -57,5 +57,3 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email"        # use email for login instead of username
     REQUIRED_FIELDS = ['first_name', 'last_name']
-    
-    
