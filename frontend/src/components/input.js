@@ -7,7 +7,6 @@ const InputField = ({ name, label, value, onChange, type, error }) => {
       <Form.Label>{label}</Form.Label>
       <Form.Control
         type={type}
-        id={name}
         placeholder={label}
         value={value}
         onChange={onChange}
