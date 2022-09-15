@@ -2,11 +2,11 @@ import Joi from "joi-browser";
 
 const schema = {
   first_name: Joi.string()
-    .regex(/^[A-Za-z]+$/)
+    .regex(/^[A-Za-z]+([a-zA-Z0-9 ]+)*$/)
     .label("First Name")
     .required(),
   last_name: Joi.string()
-    .regex(/[a-zA-Z]/)
+    .regex(/^[A-Za-z]+([a-zA-Z0-9 ]+)*$/)
     .label("Last Name"),
   email: Joi.string().email().label("Email"),
   password: Joi.string().min(8).label("Password"),
