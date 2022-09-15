@@ -1,11 +1,28 @@
-const Navbar = () => {
+import Container from "react-bootstrap/Container";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+
+const NavBar = () => {
   return (
-    <nav className="navbar navbar-dark bg-dark">
-      <span className="navbar-brand bg-dark text-white-50">
-        E-Learning System
-      </span>
-    </nav>
+    <Navbar bg="dark" variant="dark" fixed="top">
+      <Container className="bg-dark">
+        <Navbar.Brand className="bg-dark" href="#">
+          E-Learning System
+        </Navbar.Brand>
+        <Nav className="text-right">
+          <Nav.Link className="bg-dark" href="##">
+            Link1
+          </Nav.Link>
+          <Nav.Link className="bg-dark" href="##">
+            Link2
+          </Nav.Link>
+          <Nav.Link className="bg-dark" href="##">
+            Link2
+          </Nav.Link>
+        </Nav>
+      </Container>
+    </Navbar>
   );
 };
 
-export default Navbar;
+export default NavBar;

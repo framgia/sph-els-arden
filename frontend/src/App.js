@@ -1,13 +1,13 @@
-import Register from "./components/register";
-import Navbar from "./components/navbar";
+import Register from "./pages/register";
+import Container from "react-bootstrap/Container";
+import "./asset/style.css";
 
 function App() {
   return (
     <div className="App">
-      <Navbar />
-      <div className="container mt-5">
+      <Container className="container mt-5 pt-5 mb-5">
         <Register />
-      </div>
+      </Container>
     </div>
   );
 }

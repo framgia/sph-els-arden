@@ -1,10 +1,16 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
-import { register } from "../features/user";
-import InputField from "./input";
-import { validate, validateField, getErrorMessage } from "./validation";
+import { register } from "../store/user";
+import InputField from "../components/input";
+import {
+  validate,
+  validateField,
+  getErrorMessage,
+} from "../components/validation";
 
 const Register = () => {
   const registrant = useSelector((state) => state.registrant.value);
@@ -37,7 +43,6 @@ const Register = () => {
     } else {
       const error_payload = { ...registrant.errors };
       delete error_payload[name]; // remove the error
-      // console.log(name);
       payload = { ...registrant, [name]: value, errors: error_payload };
     }
 
@@ -48,8 +53,8 @@ const Register = () => {
 
   return (
     <div>
-      <h1>Registration Page</h1>
-      <form onSubmit={handleSubmit}>
+      <h1>Register</h1>
+      <Form onSubmit={handleSubmit}>
         <InputField
           name="first_name"
           value={registrant.first_name}
@@ -94,8 +99,8 @@ const Register = () => {
           onChange={handleChange}
           error={registrant.errors.password2}
         />
-        <button className="btn btn-primary">Submit</button>
-      </form>
+        <Button onClick={handleSubmit}>Submit</Button>
+      </Form>
     </div>
   );
 };

@@ -1,12 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
-import "./style.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import NavBar from "./components/navbar";
 
-import registrantReducer from "./features/user";
+import "./asset/style.css";
+import registrantReducer from "./store/user";
 
 const store = configureStore({
   //collection of reducers
@@ -19,6 +20,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
+      <NavBar />
       <App />
     </Provider>
   </React.StrictMode>

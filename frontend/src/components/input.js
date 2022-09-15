@@ -1,20 +1,25 @@
 import React from "react";
+import Form from "react-bootstrap/Form";
 
 const InputField = ({ name, label, value, onChange, type, error }) => {
   return (
-    <div className="form-group">
-      <label htmlFor={name}>{label}</label>
-      <input
-        onChange={onChange}
-        value={value}
-        id={name}
+    <Form.Group className="mb-3" controlId={name}>
+      <Form.Label>{label}</Form.Label>
+      <Form.Control
         type={type}
-        className="form-control"
+        id={name}
+        placeholder={label}
+        value={value}
+        onChange={onChange}
       />
 
       {/* conditional rendering */}
-      {error && <div className="alert alert-danger">{error}</div>}
-    </div>
+      {error && (
+        <Form.Text id={name} muted>
+          {error}
+        </Form.Text>
+      )}
+    </Form.Group>
   );
 };
 
