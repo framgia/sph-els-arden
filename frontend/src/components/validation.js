@@ -2,11 +2,11 @@ import Joi from "joi-browser";
 
 const schema = {
   first_name: Joi.string()
-    .regex(/^[A-Za-z]+([a-zA-Z0-9 ]+)*$/)
+    .regex(/^[A-Za-z]+([a-zA-Z ]+)*$/)
     .label("First Name")
     .required(),
   last_name: Joi.string()
-    .regex(/^[A-Za-z]+([a-zA-Z0-9 ]+)*$/)
+    .regex(/^[A-Za-z]+([a-zA-Z ]+)*$/)
     .label("Last Name"),
   email: Joi.string().email().label("Email"),
   password: Joi.string().min(8).label("Password"),
@@ -18,7 +18,7 @@ const schema = {
 
 // helper functions
 const validate = (obj) => {
-  const { errors, ...state } = obj; // create new object without the errors key
+  const { success, errors, ...state } = obj; // create new object without the errors key
   const { error } = Joi.validate(state, schema, { abortEarly: false });
 
   const result = {};

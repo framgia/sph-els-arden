@@ -6,6 +6,7 @@ const initialStateValue = {
   email: "",
   password: "",
   password2: "",
+  success: false,
   errors: {},
 };
 
