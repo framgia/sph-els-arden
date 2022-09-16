@@ -6,23 +6,39 @@ import Form from "react-bootstrap/Form";
 
 import { register } from "../store/user";
 import InputField from "../components/input";
-import {
-  validate,
-  validateField,
-  getErrorMessage,
-} from "../components/validation";
+import { validate, validateField, getErrorMessage } from "../utils/validation";
+import * as userService from "../services/userService";
 
 const Register = () => {
   const registrant = useSelector((state) => state.registrant.value);
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const errors = validate(registrant);
     const payload = { ...registrant, errors };
     dispatch(register(payload));
-    // if there are no errors, register through api
+
+    // if there are no errors, try register through api
+    if (Object.keys(errors).length === 0) {
+      try {
+        await userService.register(registrant);
+        const payload = { ...registrant, success: true };
+        dispatch(register(payload));
+      } catch (exception) {
+        if (exception.response && exception.response.status === 400) {
+          // if failed, update state and show error
+          const response_error = exception.response.data;
+          const key = Object.keys(response_error);
+          const message = response_error[key][0];
+          const error = { [key]: message };
+
+          const payload = { ...registrant, errors: error, success: false };
+          dispatch(register(payload));
+        }
+      }
+    }
   };
 
   const handleChange = ({ currentTarget: input }) => {
@@ -31,7 +47,7 @@ const Register = () => {
     const error = {};
     let payload = {};
 
-    const errors = validateField(name, value);
+    const errors = validateField(name, value, { ...registrant });
 
     if (errors) {
       const key = errors.path[0];
@@ -39,11 +55,21 @@ const Register = () => {
       error[key] = message;
 
       const error_payload = { ...registrant.errors, [key]: message };
-      payload = { ...registrant, [name]: value, errors: error_payload };
+      payload = {
+        ...registrant,
+        [name]: value,
+        errors: error_payload,
+        success: false,
+      };
     } else {
       const error_payload = { ...registrant.errors };
       delete error_payload[name]; // remove the error
-      payload = { ...registrant, [name]: value, errors: error_payload };
+      payload = {
+        ...registrant,
+        [name]: value,
+        errors: error_payload,
+        success: false,
+      };
     }
 
     // create new object for payload
@@ -101,6 +127,7 @@ const Register = () => {
         />
         <Button onClick={handleSubmit}>Submit</Button>
       </Form>
+      {registrant.success && <Form.Text muted>Registration Sucess!</Form.Text>}
     </div>
   );
 };
