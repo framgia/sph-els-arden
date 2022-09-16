@@ -14,16 +14,12 @@ JWT_SECRET = "sels-project"
 class RegisterAPI(APIView):
 
     def post(self, request):
-
-        # hash the password
         hashedPassword = make_password(request.data["password"])
         request.data["password"] = hashedPassword
-        print(request.data["password"])
 
 
         serializer = UserSerializer(data=request.data)
 
-        # check validity of the given data before saving
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -37,7 +33,6 @@ class LoginAPI(APIView):
         email = request.data['email']
         password = request.data['password']
 
-        # filter using unique email
         user = User.objects.filter(email=email).first()
 
         if user is None:
@@ -46,17 +41,16 @@ class LoginAPI(APIView):
         if not user.check_password(password):
             raise AuthenticationFailed("Incorrect password!")
 
-        # start creating jwt
         payload = {
             'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),  # 60 min validity of token
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
             'iat': datetime.datetime.utcnow(),
         }
 
         token = jwt.encode(payload, JWT_SECRET, algorithm='HS256')
 
         response = Response()
-        response.set_cookie(key='jwt', value=token, httponly=True)  # set it to cookie
+        response.set_cookie(key='jwt', value=token, httponly=True)
         response.data = {
             'jwt': token,
         }
