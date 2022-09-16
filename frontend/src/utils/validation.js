@@ -32,7 +32,6 @@ const validate = (obj) => {
 
 const validateField = (name, value, state) => {
   if (name === "password2") {
-    console.log("password2");
     const obj = { password: state.password, [name]: value };
     const newSchema = {
       [name]: schema[name],

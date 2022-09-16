@@ -6,11 +6,7 @@ import Form from "react-bootstrap/Form";
 
 import { register } from "../store/user";
 import InputField from "../components/input";
-import {
-  validate,
-  validateField,
-  getErrorMessage,
-} from "../components/validation";
+import { validate, validateField, getErrorMessage } from "../utils/validation";
 import * as userService from "../services/userService";
 
 const Register = () => {

@@ -1,3 +1,3 @@
-const registerAPI = "http://127.0.0.1:8000/api/register/";
+const mainAPI = "http://127.0.0.1:8000/api";
 
-export { registerAPI };
+export default mainAPI;
