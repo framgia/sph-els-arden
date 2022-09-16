@@ -51,7 +51,7 @@ const Register = () => {
     const error = {};
     let payload = {};
 
-    const errors = validateField(name, value);
+    const errors = validateField(name, value, { ...registrant });
 
     if (errors) {
       const key = errors.path[0];

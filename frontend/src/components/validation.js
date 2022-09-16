@@ -30,14 +30,23 @@ const validate = (obj) => {
   return result;
 };
 
-const validateField = (name, value) => {
-  const obj = { [name]: value };
-  const singleSchema = { [name]: schema[name] };
-  const { error } = Joi.validate(obj, singleSchema);
-
-  if (!error) return null;
-
-  return error.details[0];
+const validateField = (name, value, state) => {
+  if (name === "password2") {
+    console.log("password2");
+    const obj = { password: state.password, [name]: value };
+    const newSchema = {
+      [name]: schema[name],
+      password: schema["password"],
+    };
+    const { error } = Joi.validate(obj, newSchema);
+    return !error ? null : error.details[0];
+  } else {
+    const obj = { [name]: value };
+    const singleSchema = { [name]: schema[name] };
+    const { error } = Joi.validate(obj, singleSchema);
+    if (!error) return null;
+    return error.details[0];
+  }
 };
 
 const getErrorMessage = (error) => {
