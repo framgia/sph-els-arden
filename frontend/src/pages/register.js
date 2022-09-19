@@ -1,8 +1,12 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 import { register } from "../store/user";
 import InputField from "../components/input";
@@ -79,55 +83,64 @@ const Register = () => {
 
   return (
     <div>
-      <h1>Register</h1>
-      <Form onSubmit={handleSubmit}>
-        <InputField
-          name="first_name"
-          value={registrant.first_name}
-          label="First Name"
-          type="text"
-          onChange={handleChange}
-          error={registrant.errors.first_name}
-        />
+      <Container>
+        <Row>
+          <Col md={{ span: 6, offset: 3 }}>
+            <h1>Register</h1>
+            <Form onSubmit={handleSubmit}>
+              <InputField
+                name="first_name"
+                value={registrant.first_name}
+                label="First Name"
+                type="text"
+                onChange={handleChange}
+                error={registrant.errors.first_name}
+              />
 
-        <InputField
-          name="last_name"
-          value={registrant.last_name}
-          label="Last Name"
-          type="text"
-          onChange={handleChange}
-          error={registrant.errors.last_name}
-        />
+              <InputField
+                name="last_name"
+                value={registrant.last_name}
+                label="Last Name"
+                type="text"
+                onChange={handleChange}
+                error={registrant.errors.last_name}
+              />
 
-        <InputField
-          name="email"
-          value={registrant.email}
-          label="Email"
-          type="text"
-          onChange={handleChange}
-          error={registrant.errors.email}
-        />
+              <InputField
+                name="email"
+                value={registrant.email}
+                label="Email"
+                type="text"
+                onChange={handleChange}
+                error={registrant.errors.email}
+              />
 
-        <InputField
-          name="password"
-          value={registrant.password}
-          label="Password"
-          type="password"
-          onChange={handleChange}
-          error={registrant.errors.password}
-        />
+              <InputField
+                name="password"
+                value={registrant.password}
+                label="Password"
+                type="password"
+                onChange={handleChange}
+                error={registrant.errors.password}
+              />
 
-        <InputField
-          name="password2"
-          value={registrant.password2}
-          label="Confirm Password"
-          type="password"
-          onChange={handleChange}
-          error={registrant.errors.password2}
-        />
-        <Button onClick={handleSubmit}>Submit</Button>
-      </Form>
-      {registrant.success && <Form.Text muted>Registration Sucess!</Form.Text>}
+              <InputField
+                name="password2"
+                value={registrant.password2}
+                label="Confirm Password"
+                type="password"
+                onChange={handleChange}
+                error={registrant.errors.password2}
+              />
+              <Button onClick={handleSubmit}>Submit</Button>
+            </Form>
+            {registrant.success && (
+              <Form.Text muted>Registration Sucess!</Form.Text>
+            )}
+            <Link to="/login">Already have an account?</Link>
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 };
