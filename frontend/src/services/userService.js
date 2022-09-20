@@ -19,7 +19,6 @@ export function login(user) {
 
 export function loggedInUser() {
   const confirmAction = httpService.get(`${api}/user`);
-  console.log(confirmAction);
   return confirmAction;
 }
 
