@@ -143,3 +143,8 @@ AUTH_USER_MODEL = "users.User"
 # for cors header
 CORS_ORIGIN_ALLOW_ALL = True    # to allow access from frontend
 CORS_ALLOW_CREDENTIALS = True   # to get the cookies
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
