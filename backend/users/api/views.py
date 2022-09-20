@@ -43,14 +43,14 @@ class LoginAPI(APIView):
 
         payload = {
             'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=3),
             'iat': datetime.datetime.utcnow(),
         }
 
         token = jwt.encode(payload, JWT_SECRET, algorithm='HS256')
 
         response = Response()
-        response.set_cookie(key='jwt', value=token, httponly=True)
+        response.set_cookie(key='jwt', value=token, httponly=True, samesite='None', secure=True)
         response.data = {
             'jwt': token,
         }
