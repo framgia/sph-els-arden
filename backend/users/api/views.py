@@ -33,10 +33,6 @@ class LoginAPI(APIView):
         email = request.data['email']
         password = request.data['password']
 
-<<<<<<< HEAD
-=======
-        # filter using unique email
->>>>>>> 79ce2f5 (create user login/logout api)
         user = User.objects.filter(email=email).first()
 
         if user is None:
@@ -45,27 +41,16 @@ class LoginAPI(APIView):
         if not user.check_password(password):
             raise AuthenticationFailed("Incorrect password!")
 
-<<<<<<< HEAD
         payload = {
             'id': user.id,
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-=======
-        # start creating jwt
-        payload = {
-            'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),  # 60 min validity of token
->>>>>>> 79ce2f5 (create user login/logout api)
             'iat': datetime.datetime.utcnow(),
         }
 
         token = jwt.encode(payload, JWT_SECRET, algorithm='HS256')
 
         response = Response()
-<<<<<<< HEAD
         response.set_cookie(key='jwt', value=token, httponly=True)
-=======
-        response.set_cookie(key='jwt', value=token, httponly=True)  # set it to cookie
->>>>>>> 79ce2f5 (create user login/logout api)
         response.data = {
             'jwt': token,
         }
