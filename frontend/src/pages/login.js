@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
@@ -16,6 +16,7 @@ import * as userService from "../services/userService";
 const Login = () => {
   const userLogin = useSelector((state) => state.login.value);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,6 +31,10 @@ const Login = () => {
         await userService.login(userLogin);
         const payload = { ...userLogin, success: true };
         dispatch(login(payload));
+        const logged_user = await userService.loggedInUser();
+        const admin = logged_user.data.is_staff;
+        document.cookie = "admin=" + admin;
+        navigate("/home");
       } catch (exception) {
         if (exception.response) {
           // if failed, update state and show error

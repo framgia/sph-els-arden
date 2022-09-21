@@ -3,6 +3,7 @@ from rest_framework import exceptions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.permissions import BasePermission, IsAuthenticated, AllowAny
 from django.contrib.auth.hashers import make_password
 import jwt, datetime
 
@@ -12,7 +13,7 @@ from users.models import User
 JWT_SECRET = "sels-project"
 
 class RegisterAPI(APIView):
-
+    permission_classes = [AllowAny]
     def post(self, request):
         hashedPassword = make_password(request.data["password"])
         request.data["password"] = hashedPassword
@@ -26,6 +27,8 @@ class RegisterAPI(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginAPI(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
         if not request.data:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -33,7 +36,7 @@ class LoginAPI(APIView):
         email = request.data['email']
         password = request.data['password']
 
-        user = User.objects.filter(email=email).first()
+        user = User.objects.get(email=email)
 
         if user is None:
             raise AuthenticationFailed("This user doesn not exist!")
@@ -53,6 +56,7 @@ class LoginAPI(APIView):
         response.set_cookie(key='jwt', value=token, httponly=True, samesite='None', secure=True)
         response.data = {
             'jwt': token,
+            'is_admin': user.is_superuser
         }
 
         return response
@@ -80,7 +84,7 @@ class UserAPI(APIView):
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed("Session expired!")
         
-        user = User.objects.filter(id=payload['id']).first()
+        user = User.objects.get(id=payload['id'])
         serializer = UserSerializer(user)
 
         return Response(serializer.data)

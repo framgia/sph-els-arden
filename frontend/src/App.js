@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import "./asset/style.css";
 import Login from "./pages/login";
+import Dashboard from "./pages/dashboard";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/home" element={<Dashboard />} />
         </Routes>
       </Container>
     </div>
