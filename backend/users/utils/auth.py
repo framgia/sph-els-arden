@@ -10,10 +10,8 @@ JWT_SECRET = "sels-project"
 class Auth(BaseAuthentication):
     def authenticate(self, request):
         token = request.COOKIES.get('jwt')
-        print(token)
 
         if not token:
-            # raise AuthenticationFailed("Unauthenticated!")
             return None
 
         try:
