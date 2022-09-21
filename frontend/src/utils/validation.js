@@ -16,12 +16,28 @@ const schema = {
     .label("Confirm Password"),
 };
 
-// helper functions
-const validate = (obj) => {
-  const { success, errors, ...state } = obj; // create new object without the errors key
-  const { error } = Joi.validate(state, schema, { abortEarly: false });
+const loginSchema = {
+  email: schema["email"],
+  password: schema["password"],
+};
 
+// helper functions
+export const validate = (obj) => {
+  const { success, errors, ...state } = obj; // create new object without the errors and success key
+  let joiResult = {};
   const result = {};
+
+  if (
+    Object.keys(state).length === 2 &&
+    "email" in state &&
+    "password" in state
+  ) {
+    joiResult = Joi.validate(state, loginSchema, { abortEarly: false });
+  } else {
+    joiResult = Joi.validate(state, schema, { abortEarly: false });
+  }
+
+  const { error } = joiResult;
   if (!error) return result;
 
   // get the message for every error
@@ -30,7 +46,7 @@ const validate = (obj) => {
   return result;
 };
 
-const validateField = (name, value, state) => {
+export const validateField = (name, value, state) => {
   if (name === "password2") {
     const obj = { password: state.password, [name]: value };
     const newSchema = {
@@ -48,7 +64,7 @@ const validateField = (name, value, state) => {
   }
 };
 
-const getErrorMessage = (error) => {
+export const getErrorMessage = (error) => {
   const type = error.type;
   const key = error.path[0];
   const label = error.context.label;
@@ -132,4 +148,32 @@ const getErrorMessage = (error) => {
   return message;
 };
 
-export { validate, validateField, getErrorMessage };
+export const getErrorPayload = (name, value, errors, state) => {
+  const error = {};
+  let payload = {};
+
+  if (errors) {
+    const key = errors.path[0];
+    const message = getErrorMessage(errors);
+    error[key] = message;
+
+    const error_payload = { ...state.errors, [key]: message };
+    payload = {
+      ...state,
+      [name]: value,
+      errors: error_payload,
+      success: false,
+    };
+  } else {
+    const error_payload = { ...state.errors };
+    delete error_payload[name]; // remove the error
+    payload = {
+      ...state,
+      [name]: value,
+      errors: error_payload,
+      success: false,
+    };
+  }
+
+  return payload;
+};

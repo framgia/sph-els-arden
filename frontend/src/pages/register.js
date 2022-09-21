@@ -10,7 +10,7 @@ import Col from "react-bootstrap/Col";
 
 import { register } from "../store/user";
 import InputField from "../components/input";
-import { validate, validateField, getErrorMessage } from "../utils/validation";
+import { validate, validateField, getErrorPayload } from "../utils/validation";
 import * as userService from "../services/userService";
 
 const Register = () => {
@@ -48,33 +48,11 @@ const Register = () => {
   const handleChange = ({ currentTarget: input }) => {
     const name = input.id;
     const value = input.value;
-    const error = {};
     let payload = {};
 
     const errors = validateField(name, value, { ...registrant });
 
-    if (errors) {
-      const key = errors.path[0];
-      const message = getErrorMessage(errors);
-      error[key] = message;
-
-      const error_payload = { ...registrant.errors, [key]: message };
-      payload = {
-        ...registrant,
-        [name]: value,
-        errors: error_payload,
-        success: false,
-      };
-    } else {
-      const error_payload = { ...registrant.errors };
-      delete error_payload[name]; // remove the error
-      payload = {
-        ...registrant,
-        [name]: value,
-        errors: error_payload,
-        success: false,
-      };
-    }
+    payload = getErrorPayload(name, value, errors, { ...registrant });
 
     // create new object for payload
     //update state every change in the input field
@@ -132,7 +110,9 @@ const Register = () => {
                 onChange={handleChange}
                 error={registrant.errors.password2}
               />
-              <Button onClick={handleSubmit}>Submit</Button>
+              <div className="d-grid gap-2">
+                <Button onClick={handleSubmit}>Register</Button>
+              </div>
             </Form>
             {registrant.success && (
               <Form.Text muted>Registration Sucess!</Form.Text>

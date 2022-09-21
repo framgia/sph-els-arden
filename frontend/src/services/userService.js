@@ -9,3 +9,19 @@ export function register(user) {
     password: user.password,
   });
 }
+
+export function login(user) {
+  return httpService.post(`${api}/login`, {
+    email: user.email.toLowerCase(),
+    password: user.password,
+  });
+}
+
+export function loggedInUser() {
+  const confirmAction = httpService.get(`${api}/user`);
+  return confirmAction;
+}
+
+export function logout() {
+  return httpService.post(`${api}/logout`);
+}
