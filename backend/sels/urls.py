@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('users.api.urls')),
     path('api/profiles/', include('profiles.api.urls')),
+    path('api/follows/', include('follows.api.urls')),
 ]
 
 if settings.DEBUG:
