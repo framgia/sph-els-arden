@@ -8,12 +8,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import "./asset/style.css";
 import NavBar from "./components/navbar";
-import registrantReducer from "./store/user";
+import reducers from "./store/user";
 
 const store = configureStore({
   //collection of reducers
   reducer: {
-    registrant: registrantReducer,
+    registrant: reducers.registrantReducer,
+    login: reducers.loginReducer,
   },
 });
 
