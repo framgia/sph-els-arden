@@ -1,11 +1,10 @@
 from rest_framework.response import Response
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
-import jwt, datetime
+import jwt
+from sels.settings import JWT_SECRET, JWT_ALGORITHM
 
 from users.models import User
-
-JWT_SECRET = "sels-project"
 
 class Auth(BaseAuthentication):
     def authenticate(self, request):
@@ -15,7 +14,7 @@ class Auth(BaseAuthentication):
             return None
 
         try:
-            payload = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
+            payload = jwt.decode(token, JWT_SECRET, algorithms=JWT_ALGORITHM)
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed("Session expired!")
 
