@@ -1,9 +1,9 @@
 import Register from "./pages/register";
 import { Route, Routes } from "react-router-dom";
 import Container from "react-bootstrap/Container";
-import "./asset/style.css";
 import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
+import Profile from "./pages/profile";
 
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Container>
     </div>
