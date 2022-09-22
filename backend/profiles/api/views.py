@@ -2,13 +2,13 @@ from msilib.schema import AppId
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from users.api.serializers import UserProfileSerializer
 
+from users.api.serializers import UserProfileSerializer
 from profiles.models import Profile
 from users.models import User
-
 from .serializers import ProfileSerializer, AvatarSerializer
 from users.api.serializers import UserProfileSerializer
+from utils.jwt_payload import getJWTPayload
 
 class createProfileAPI(APIView):
     def post(self, request):
@@ -68,3 +68,36 @@ class AvatarUploadAPI(APIView):
             avatarSerializer.save()
             return Response(avatarSerializer.data,status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_200_OK)
+
+class viewProfile(APIView):
+    def get(self, request):
+        payload = getJWTPayload(request)
+        profile = ProfileSerializer(Profile.objects.get(user_id=payload['id']))
+        user = UserProfileSerializer(User.objects.get(id=payload['id']))
+
+        response_load = {
+            'profile': profile.data, 
+            'user': user.data
+        }
+
+        return Response(response_load, status=status.HTTP_200_OK)
+
+class viewOtherProfile(APIView):
+    def get(self, request, pk):
+        data = request.data
+        try:
+            # profile = Profile.objects.get(pk=pk)
+            profile = ProfileSerializer(Profile.objects.get(user_id=pk))
+            user = UserProfileSerializer(User.objects.get(id=pk))
+
+        except Profile.DoesNotExist or User.DoesNotExist:
+            return Response({'message': "this profile does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        response_load = {
+            'profile': profile.data, 
+            'user': user.data
+        }
+
+        return Response(response_load, status=status.HTTP_200_OK)
