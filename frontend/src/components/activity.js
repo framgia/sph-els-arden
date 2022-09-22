@@ -15,7 +15,7 @@ const Activity = () => {
           <p>Sample activity</p>
           <p>Sample date</p>
         </Col>
-        <hr></hr>
+        <hr />
       </Row>
     </Container>
   );

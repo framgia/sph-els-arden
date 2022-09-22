@@ -12,7 +12,7 @@ const ProfileOverview = () => {
         <Card.Img variant="top" src={avatarPlaceholder} />
         <Card.Body>
           <Card.Title>User Name</Card.Title>
-          <hr></hr>
+          <hr />
           <Row className="justify-content-center">
             <Col>
               <p>Count</p>
