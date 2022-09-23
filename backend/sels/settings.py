@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'users',
     'profiles',
     'follows',
+    'admins',
 ]
 
 MIDDLEWARE = [
