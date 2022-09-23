@@ -21,9 +21,18 @@ const loginSchema = {
   password: schema["password"],
 };
 
+const editProfileSchema = {
+  first_name: schema["first_name"],
+  last_name: schema["last_name"],
+  email: schema["email"],
+  password: schema["password"],
+  password2: schema["password2"],
+  avatar: Joi.required(),
+};
+
 // helper functions
 export const validate = (obj) => {
-  const { success, errors, ...state } = obj; // create new object without the errors and success key
+  const { user_id, success, errors, ...state } = obj; // create new object without some keys
   let joiResult = {};
   const result = {};
 
@@ -33,6 +42,13 @@ export const validate = (obj) => {
     "password" in state
   ) {
     joiResult = Joi.validate(state, loginSchema, { abortEarly: false });
+  } else if (
+    Object.keys(state).length === 6 &&
+    "email" in state &&
+    "password" in state &&
+    "avatar" in state
+  ) {
+    joiResult = Joi.validate(state, editProfileSchema, { abortEarly: false });
   } else {
     joiResult = Joi.validate(state, schema, { abortEarly: false });
   }
