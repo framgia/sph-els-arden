@@ -15,6 +15,7 @@ const profileInitialState = {
 };
 
 const editingProfileInitialState = {
+  profile_id: "",
   user_id: "",
   avatar: "",
   success: false,

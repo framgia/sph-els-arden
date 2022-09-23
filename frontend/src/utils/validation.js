@@ -32,7 +32,7 @@ const editProfileSchema = {
 
 // helper functions
 export const validate = (obj) => {
-  const { user_id, success, errors, ...state } = obj;
+  const { profile_id, user_id, success, errors, ...state } = obj;
   let joiResult = {};
   const result = {};
 

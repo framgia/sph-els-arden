@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
@@ -10,17 +10,57 @@ import Col from "react-bootstrap/Col";
 import { editProfile } from "../store/profile";
 import InputField from "../components/input";
 import { validate, validateField, getErrorPayload } from "../utils/validation";
+import * as profileService from "../services/profileService";
 
 const EditProfile = () => {
   const state = useSelector((state) => state.editProfile.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  let avatarFile = {};
 
-  const handleSubmit = () => {
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const { data } = await profileService.getCurrentProfile();
+      const payload = {
+        ...state,
+        profile_id: data.profile.id,
+        user_id: data.profile.user_id,
+      };
+      dispatch(editProfile(payload));
+      return data;
+    };
+    fetchProfile();
+  }, []);
+
+  const handleSubmit = async () => {
     const errors = validate(state);
     const payload = { ...state, errors };
     dispatch(editProfile(payload));
-    // navigate("/profile");
+
+    if (Object.keys(errors).length === 0) {
+      try {
+        await profileService.update(state);
+        const payload = { ...state, success: true };
+        dispatch(editProfile(payload));
+
+        await profileService.uploadAvatar(state, avatarFile);
+      } catch (exception) {
+        if (exception.response) {
+          console.log(exception);
+          // if failed, update state and show error
+          const response_error = exception.response.data;
+          const key = Object.keys(response_error);
+          const message = response_error[key];
+          const error = { [key]: message };
+
+          const payload = { ...state, errors: error, success: false };
+          dispatch(editProfile(payload));
+        }
+      }
+      if (Object.keys(errors).length === 0) {
+        navigate("/profile");
+      }
+    }
   };
 
   const handleChange = ({ currentTarget: input }) => {
@@ -35,6 +75,14 @@ const EditProfile = () => {
 
     dispatch(editProfile(payload));
   };
+
+  const handleFileChange = async (event) => {
+    const formData = new FormData();
+    const avatar = event.target.files[0];
+    formData.append("avatar", avatar);
+    avatarFile = formData;
+  };
+
   return (
     <Container>
       <Row>
@@ -90,9 +138,9 @@ const EditProfile = () => {
               />
             </Row>
             <Row>
-              <Form.Group controlId="formFile" className="mb-3">
+              <Form.Group controlId="avatarUpload" className="mb-3">
                 <Form.Label>Avatar</Form.Label>
-                <Form.Control type="file" />
+                <Form.Control type="file" onChange={handleFileChange} />
               </Form.Group>
             </Row>
             <div className="d-grid gap-2">
