@@ -8,13 +8,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import "./asset/style.css";
 import NavBar from "./components/navbar";
-import reducers from "./store/user";
+import userReducer from "./store/user";
+import profileReducer from "./store/profile";
 
 const store = configureStore({
   //collection of reducers
   reducer: {
-    registrant: reducers.registrantReducer,
-    login: reducers.loginReducer,
+    registrant: userReducer.registrantReducer,
+    login: userReducer.loginReducer,
+    editProfile: profileReducer.editProfileReducer,
   },
 });
 

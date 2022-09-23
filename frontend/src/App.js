@@ -4,6 +4,7 @@ import Container from "react-bootstrap/Container";
 import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
 import Profile from "./pages/profile";
+import EditProfile from "./pages/editProfile";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/edit" element={<EditProfile />} />
         </Routes>
       </Container>
     </div>
