@@ -12,26 +12,7 @@ import * as profileService from "../services/profileService";
 import { getErrorMessage } from "../utils/validation";
 
 const EditProfile = () => {
-  const [profile_id, setProfile_id] = useState();
-  const [user_id, setUser_id] = useState();
-  const [success, setSuccess] = useState(false);
-  const [first_name, setFirst_name] = useState("");
-  const [last_name, setLast_name] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [errors, setErrors] = useState({});
-  const state = {
-    profile_id: profile_id,
-    user_id: user_id,
-    success: success,
-    first_name: first_name,
-    last_name: last_name,
-    email: email,
-    password: password,
-    password2: password2,
-    errors: errors,
-  };
+  const [state, setState] = useState({ errors: {} });
 
   const navigate = useNavigate();
   let avatarFile = {};
@@ -39,18 +20,22 @@ const EditProfile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       const { data } = await profileService.getCurrentProfile();
-      setProfile_id(data.profile.id);
-      setUser_id(data.profile.user_id);
-      setFirst_name(data.user.first_name);
-      setLast_name(data.user.last_name);
-      setEmail(data.user.email);
+      const profile = data.profile;
+      delete profile["avatar"];
+      delete profile["total_words_learned"];
+      delete profile["total_lessons_learned"];
+      const user = data.user;
+      const errors = {};
+      const payload = { ...state, ...profile, ...user, errors };
+
+      setState(payload);
     };
     fetchProfile();
   }, []);
 
   const handleSubmit = async () => {
     const currErrors = validate(state);
-    setErrors(currErrors);
+    setState({ ...state, errors: currErrors });
 
     if (Object.keys(currErrors).length === 0) {
       try {
@@ -61,8 +46,7 @@ const EditProfile = () => {
           avatarFile
         );
         if (avatarResponse.status === 201 && profileResponse.status === 201) {
-          setSuccess(true);
-          navigate("/profile");
+          // navigate("/profile");
         }
       } catch (exception) {
         if (exception.response) {
@@ -72,8 +56,7 @@ const EditProfile = () => {
           const message = response_error[key];
           const error = { [key]: message };
 
-          setErrors(error);
-          setSuccess(false);
+          setState({ ...state, errors: error });
         }
       }
     }
@@ -82,41 +65,18 @@ const EditProfile = () => {
   const handleChange = ({ currentTarget: input }) => {
     const name = input.id;
     const value = input.value;
-    const resetFieldError = { ...state.errors };
     let payload = {};
-
-    delete resetFieldError[name];
-    setErrors(resetFieldError);
 
     const currErrors = validateField(name, value, { ...state });
     if (currErrors) {
       const key = currErrors.path[0];
       const message = getErrorMessage(currErrors);
 
-      payload = { ...errors };
+      payload = { ...state.errors };
       payload[key] = message;
-      setErrors(payload);
     }
 
-    switch (name) {
-      case "first_name":
-        setFirst_name(value);
-        break;
-      case "last_name":
-        setLast_name(value);
-        break;
-      case "email":
-        setEmail(value);
-        break;
-      case "password":
-        setPassword(value);
-        break;
-      case "password2":
-        setPassword2(value);
-        break;
-      default:
-        break;
-    }
+    setState({ ...state, [name]: value, errors: payload });
   };
 
   const handleFileChange = async (event) => {
@@ -136,7 +96,6 @@ const EditProfile = () => {
               <Col>
                 <InputField
                   name="first_name"
-                  value={state.first_name}
                   label="First Name"
                   type="text"
                   onChange={handleChange}
@@ -146,7 +105,6 @@ const EditProfile = () => {
               <Col>
                 <InputField
                   name="last_name"
-                  value={state.last_name}
                   label="Last Name"
                   type="text"
                   onChange={handleChange}
@@ -157,7 +115,6 @@ const EditProfile = () => {
             <Row>
               <InputField
                 name="email"
-                value={state.email}
                 label="Email"
                 type="text"
                 onChange={handleChange}
@@ -165,7 +122,6 @@ const EditProfile = () => {
               />
               <InputField
                 name="password"
-                value={state.password}
                 label="Password"
                 type="password"
                 onChange={handleChange}
@@ -173,7 +129,6 @@ const EditProfile = () => {
               />
               <InputField
                 name="password2"
-                value={state.password2}
                 label="Confirm Password"
                 type="password"
                 onChange={handleChange}

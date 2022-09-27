@@ -2,7 +2,7 @@ import api from "./apis";
 import httpService from "./httpService";
 
 export function update(user) {
-  return httpService.patch(`${api}/profiles/updateProfile/${user.profile_id}`, {
+  return httpService.patch(`${api}/profiles/updateProfile/${user.id}`, {
     user_id: user.user_id,
     user: {
       first_name: user.first_name.toLowerCase(),
@@ -18,13 +18,9 @@ export function getCurrentProfile() {
 }
 
 export function uploadAvatar(user, formData) {
-  return httpService.post(
-    `${api}/profiles/uploadAvatar/${user.profile_id}`,
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  return httpService.post(`${api}/profiles/uploadAvatar/${user.id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 }
