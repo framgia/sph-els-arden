@@ -14,19 +14,6 @@ const profileInitialState = {
   errors: {},
 };
 
-const editingProfileInitialState = {
-  profile_id: "",
-  user_id: "",
-  avatar: "",
-  success: false,
-  first_name: "",
-  last_name: "",
-  email: "",
-  password: "",
-  password2: "",
-  errors: "",
-};
-
 export const profileSlice = createSlice({
   name: "profile",
   initialState: {
@@ -39,23 +26,9 @@ export const profileSlice = createSlice({
   },
 });
 
-export const editingProfileSlice = createSlice({
-  name: "editProfile",
-  initialState: {
-    value: editingProfileInitialState,
-  },
-  reducers: {
-    editProfile: (state, action) => {
-      state.value = action.payload;
-    },
-  },
-});
-
 export const { setProfile } = profileSlice.actions;
-export const { editProfile } = editingProfileSlice.actions;
 
 const reducers = {
   profileReducer: profileSlice.reducer,
-  editProfileReducer: editingProfileSlice.reducer,
 };
 export default reducers;

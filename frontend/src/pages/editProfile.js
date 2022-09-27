@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -7,58 +6,75 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import { editProfile } from "../store/profile";
 import InputField from "../components/input";
-import { validate, validateField, getErrorPayload } from "../utils/validation";
+import { validate, validateField } from "../utils/validation";
 import * as profileService from "../services/profileService";
+import { getErrorMessage } from "../utils/validation";
 
 const EditProfile = () => {
-  const state = useSelector((state) => state.editProfile.value);
-  const dispatch = useDispatch();
+  const [profile_id, setProfile_id] = useState();
+  const [user_id, setUser_id] = useState();
+  const [success, setSuccess] = useState(false);
+  const [first_name, setFirst_name] = useState("");
+  const [last_name, setLast_name] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [errors, setErrors] = useState({});
+  const state = {
+    profile_id: profile_id,
+    user_id: user_id,
+    success: success,
+    first_name: first_name,
+    last_name: last_name,
+    email: email,
+    password: password,
+    password2: password2,
+    errors: errors,
+  };
+
   const navigate = useNavigate();
   let avatarFile = {};
 
   useEffect(() => {
     const fetchProfile = async () => {
       const { data } = await profileService.getCurrentProfile();
-      const payload = {
-        ...state,
-        profile_id: data.profile.id,
-        user_id: data.profile.user_id,
-      };
-      dispatch(editProfile(payload));
-      return data;
+      setProfile_id(data.profile.id);
+      setUser_id(data.profile.user_id);
+      setFirst_name(data.user.first_name);
+      setLast_name(data.user.last_name);
+      setEmail(data.user.email);
     };
     fetchProfile();
   }, []);
 
   const handleSubmit = async () => {
-    const errors = validate(state);
-    const payload = { ...state, errors };
-    dispatch(editProfile(payload));
+    const currErrors = validate(state);
+    setErrors(currErrors);
 
-    if (Object.keys(errors).length === 0) {
+    if (Object.keys(currErrors).length === 0) {
       try {
-        await profileService.update(state);
-        const payload = { ...state, success: true };
-        dispatch(editProfile(payload));
+        const profileResponse = await profileService.update(state);
 
-        await profileService.uploadAvatar(state, avatarFile);
+        const avatarResponse = await profileService.uploadAvatar(
+          state,
+          avatarFile
+        );
+        if (avatarResponse.status === 201 && profileResponse.status === 201) {
+          setSuccess(true);
+          navigate("/profile");
+        }
       } catch (exception) {
         if (exception.response) {
-          console.log(exception);
           // if failed, update state and show error
           const response_error = exception.response.data;
           const key = Object.keys(response_error);
           const message = response_error[key];
           const error = { [key]: message };
 
-          const payload = { ...state, errors: error, success: false };
-          dispatch(editProfile(payload));
+          setErrors(error);
+          setSuccess(false);
         }
-      }
-      if (Object.keys(errors).length === 0) {
-        navigate("/profile");
       }
     }
   };
@@ -66,14 +82,41 @@ const EditProfile = () => {
   const handleChange = ({ currentTarget: input }) => {
     const name = input.id;
     const value = input.value;
+    const resetFieldError = { ...state.errors };
     let payload = {};
 
-    const errors = validateField(name, value, { ...state });
+    delete resetFieldError[name];
+    setErrors(resetFieldError);
 
-    payload = getErrorPayload(name, value, errors, { ...state });
-    delete payload.errors.detail;
+    const currErrors = validateField(name, value, { ...state });
+    if (currErrors) {
+      const key = currErrors.path[0];
+      const message = getErrorMessage(currErrors);
 
-    dispatch(editProfile(payload));
+      payload = { ...errors };
+      payload[key] = message;
+      setErrors(payload);
+    }
+
+    switch (name) {
+      case "first_name":
+        setFirst_name(value);
+        break;
+      case "last_name":
+        setLast_name(value);
+        break;
+      case "email":
+        setEmail(value);
+        break;
+      case "password":
+        setPassword(value);
+        break;
+      case "password2":
+        setPassword2(value);
+        break;
+      default:
+        break;
+    }
   };
 
   const handleFileChange = async (event) => {
