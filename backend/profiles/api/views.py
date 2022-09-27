@@ -2,12 +2,12 @@ from msilib.schema import AppId
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.contrib.auth.hashers import check_password
 
-from users.api.serializers import UserProfileSerializer
 from profiles.models import Profile
 from users.models import User
-from .serializers import ProfileSerializer, AvatarSerializer
-from users.api.serializers import UserProfileSerializer
+from .serializers import ProfileSerializer, AvatarSerializer, ProfileIDSSerializer
+from users.api.serializers import UserProfileSerializer, UserProfileUpdateSerializer
 from utils.jwt_payload import getJWTPayload
 
 class createProfileAPI(APIView):
@@ -30,12 +30,11 @@ class updateProfileAPI(APIView):
 
         data = request.data
         profileSerializer = ProfileSerializer(profile, data=data)
-        
         try:
             user_data = data['user']
             user_id = data['user_id']
             user = User.objects.get(pk=user_id)
-            userProfileSerializer = UserProfileSerializer(user, data=user_data)
+            userProfileSerializer = UserProfileUpdateSerializer(user, data=user_data)
         except User.DoesNotExist:
             return Response({'message': "this user does not exist"}, status=status.HTTP_400_BAD_REQUEST)
         except:
@@ -55,6 +54,7 @@ class updateProfileAPI(APIView):
 class AvatarUploadAPI(APIView):
     def post(self, request, pk):
         data = request.data
+        print(data)
         try:
             profile = Profile.objects.get(pk=pk)
         except Profile.DoesNotExist:
@@ -67,12 +67,12 @@ class AvatarUploadAPI(APIView):
         if (avatarSerializer.is_valid()):
             avatarSerializer.save()
             return Response(avatarSerializer.data,status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class viewProfile(APIView):
     def get(self, request):
         payload = getJWTPayload(request)
-        profile = ProfileSerializer(Profile.objects.get(user_id=payload['id']))
+        profile = ProfileIDSSerializer(Profile.objects.get(user_id=payload['id']))
         user = UserProfileSerializer(User.objects.get(id=payload['id']))
 
         response_load = {

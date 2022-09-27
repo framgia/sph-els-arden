@@ -16,7 +16,7 @@ class Auth(BaseAuthentication):
         try:
             payload = jwt.decode(token, JWT_SECRET, algorithms=JWT_ALGORITHM)
         except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed("Session expired!")
+            return None
 
 
         user = User.objects.get(id=payload['id'])
