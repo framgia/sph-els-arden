@@ -12,6 +12,13 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = "__all__"
 
+class ProfileIDSSerializer(serializers.ModelSerializer):
+    # user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+
+    class Meta:
+        model = Profile
+        fields = ('id', 'user_id')
+
 class AvatarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile

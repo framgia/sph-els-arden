@@ -27,7 +27,6 @@ const editProfileSchema = {
   email: schema["email"],
   password: schema["password"],
   password2: schema["password2"],
-  avatar: Joi.required(),
 };
 
 // helper functions
@@ -43,10 +42,10 @@ export const validate = (obj) => {
   ) {
     joiResult = Joi.validate(state, loginSchema, { abortEarly: false });
   } else if (
-    Object.keys(state).length === 6 &&
+    Object.keys(state).length === 5 &&
     "email" in state &&
-    "password" in state &&
-    "avatar" in state
+    "first_name" in state &&
+    "last_name" in state
   ) {
     joiResult = Joi.validate(state, editProfileSchema, { abortEarly: false });
   } else {

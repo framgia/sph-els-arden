@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import check_password
 
 from profiles.models import Profile
 from users.models import User
-from .serializers import ProfileSerializer, AvatarSerializer
+from .serializers import ProfileSerializer, AvatarSerializer, ProfileIDSSerializer
 from users.api.serializers import UserProfileSerializer, UserProfileUpdateSerializer
 from utils.jwt_payload import getJWTPayload
 
@@ -72,7 +72,7 @@ class AvatarUploadAPI(APIView):
 class viewProfile(APIView):
     def get(self, request):
         payload = getJWTPayload(request)
-        profile = ProfileSerializer(Profile.objects.get(user_id=payload['id']))
+        profile = ProfileIDSSerializer(Profile.objects.get(user_id=payload['id']))
         user = UserProfileSerializer(User.objects.get(id=payload['id']))
 
         response_load = {

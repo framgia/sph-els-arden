@@ -12,7 +12,8 @@ import * as profileService from "../services/profileService";
 import { getErrorMessage } from "../utils/validation";
 
 const EditProfile = () => {
-  const [state, setState] = useState({ errors: {} });
+  const [state, setState] = useState();
+  const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
   let avatarFile = {};
@@ -21,23 +22,25 @@ const EditProfile = () => {
     const fetchProfile = async () => {
       const { data } = await profileService.getCurrentProfile();
       const profile = data.profile;
-      delete profile["avatar"];
-      delete profile["total_words_learned"];
-      delete profile["total_lessons_learned"];
       const user = data.user;
-      const errors = {};
-      const payload = { ...state, ...profile, ...user, errors };
+      const payload = {
+        ...state,
+        ...profile,
+        ...user,
+        password: "",
+        password2: "",
+      };
 
       setState(payload);
     };
     fetchProfile();
   }, []);
 
-  const handleSubmit = async () => {
-    const currErrors = validate(state);
-    setState({ ...state, errors: currErrors });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrors(validate(state));
 
-    if (Object.keys(currErrors).length === 0) {
+    if (Object.keys(errors).length === 0) {
       try {
         const profileResponse = await profileService.update(state);
 
@@ -46,17 +49,13 @@ const EditProfile = () => {
           avatarFile
         );
         if (avatarResponse.status === 201 && profileResponse.status === 201) {
-          // navigate("/profile");
+          navigate("/profile");
         }
       } catch (exception) {
         if (exception.response) {
           // if failed, update state and show error
           const response_error = exception.response.data;
-          const key = Object.keys(response_error);
-          const message = response_error[key];
-          const error = { [key]: message };
-
-          setState({ ...state, errors: error });
+          setErrors({ ...response_error });
         }
       }
     }
@@ -67,16 +66,21 @@ const EditProfile = () => {
     const value = input.value;
     let payload = {};
 
+    const resetFieldError = errors;
+    delete resetFieldError[name];
+    setErrors(resetFieldError);
+
     const currErrors = validateField(name, value, { ...state });
     if (currErrors) {
       const key = currErrors.path[0];
       const message = getErrorMessage(currErrors);
 
-      payload = { ...state.errors };
+      payload = { ...errors };
       payload[key] = message;
     }
 
-    setState({ ...state, [name]: value, errors: payload });
+    setState({ ...state, [name]: value });
+    setErrors({ ...errors, ...payload });
   };
 
   const handleFileChange = async (event) => {
@@ -99,7 +103,7 @@ const EditProfile = () => {
                   label="First Name"
                   type="text"
                   onChange={handleChange}
-                  error={state.errors.first_name}
+                  error={errors.first_name}
                 />
               </Col>
               <Col>
@@ -108,7 +112,7 @@ const EditProfile = () => {
                   label="Last Name"
                   type="text"
                   onChange={handleChange}
-                  error={state.errors.last_name}
+                  error={errors.last_name}
                 />
               </Col>
             </Row>
@@ -118,21 +122,21 @@ const EditProfile = () => {
                 label="Email"
                 type="text"
                 onChange={handleChange}
-                error={state.errors.email}
+                error={errors.email}
               />
               <InputField
                 name="password"
                 label="Password"
                 type="password"
                 onChange={handleChange}
-                error={state.errors.password}
+                error={errors.password}
               />
               <InputField
                 name="password2"
                 label="Confirm Password"
                 type="password"
                 onChange={handleChange}
-                error={state.errors.password2}
+                error={errors.password2}
               />
             </Row>
             <Row>
