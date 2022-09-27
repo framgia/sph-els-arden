@@ -21,12 +21,9 @@ const EditProfile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       const { data } = await profileService.getCurrentProfile();
-      const profile = data.profile;
-      const user = data.user;
       const payload = {
-        ...state,
-        ...profile,
-        ...user,
+        ...data.profile,
+        ...data.user,
         password: "",
         password2: "",
       };
