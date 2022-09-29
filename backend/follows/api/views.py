@@ -14,11 +14,13 @@ from users.api.serializers import UserProfileSerializer
 from follows.models import Follow
 from profiles.models import Profile
 from users.models import User
-from utils.jwt_payload import getJWTPayload
 
 class createFollowAPI(APIView):
-    def post(self, request):
-        serializer = FollowSerializer(data=request.data)
+    def post(self, request, pk):
+        follower = Profile.objects.get(user_id=request.user.id)
+        following = Profile.objects.get(id=pk)
+
+        serializer = FollowSerializer(data={'follower_id':follower.id, 'following_id':following.id})
 
         if serializer.is_valid():
             try:
@@ -33,7 +35,6 @@ class viewFollowersAPI(APIView):
     def get(self, request, pk):
         response_load = {}
         count =0
-        payload = getJWTPayload(request)
 
         try:
             user_profile = Profile.objects.get(user_id=pk)
@@ -57,7 +58,6 @@ class viewFollowingsAPI(APIView):
     def get(self, request, pk):
         response_load = {}
         count = 0
-        payload = getJWTPayload(request)
 
         try:
             user_profile = Profile.objects.get(user_id=pk)
@@ -80,12 +80,11 @@ class viewFollowingsAPI(APIView):
             return Response(response_load, status=status.HTTP_400_BAD_REQUEST)
 
 class deleteFollowAPI(APIView):
-    def delete(self, request):
-        following_id = request.data["following_id"]
-        follower_id = request.data["follower_id"]
+    def delete(self, request, pk):
+        current_profile = Profile.objects.get(user_id=request.user.id)
 
         try:
-            followObj = Follow.objects.filter(follower_id=follower_id, following_id=following_id)
+            followObj = Follow.objects.get(follower_id=current_profile.id, following_id=pk)
             followObj.delete()
             return Response(status=status.HTTP_200_OK)
         except ObjectDoesNotExist:

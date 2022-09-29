@@ -5,12 +5,10 @@ import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
 import avatarPlaceholder from "../asset/avatar_placeholder.png";
-import capitalizeFirstLetter from "../utils/capitalizeFirstLetter";
 import { domain } from "../services/apis";
 import { setProfile } from "../store/profile";
 import { setPage } from "../store/follow";
 import * as profileService from "../services/profileService";
-import * as userService from "../services/userService";
 
 const ProfileOverview = () => {
   const state = useSelector((state) => state.profile.value);
@@ -21,29 +19,21 @@ const ProfileOverview = () => {
   const handleFollow = async () => {
     const { data } = await profileService.getCurrentProfile();
     const id = data.profile.id;
-    const user = await userService.loggedInUser();
-    const user_id = user.data.id;
 
     try {
       if (state.follow) {
-        const load = { following_id: state.id, follower_id: id };
-        await profileService.unfollow(load);
+        await profileService.unfollow(state.id);
         dispatch(setProfile({ ...state, follow: !state.follow }));
-        const { data } = await profileService.getFollowings(user_id);
+        const { data } = await profileService.getFollowings(pageState.id);
         dispatch(setPage({ ...pageState, followings: data }));
       } else {
-        const load = { following_id: state.id, follower_id: id };
-        await profileService.follow(load);
+        await profileService.follow(state.id);
         dispatch(setProfile({ ...state, follow: !state.follow }));
-        const { data } = await profileService.getFollowings(user_id);
+        const { data } = await profileService.getFollowings(pageState.id);
         dispatch(setPage({ ...pageState, followings: data }));
       }
     } catch {}
   };
-
-  function refreshPage() {
-    window.location.reload(false);
-  }
 
   return (
     <Container fluid className="mt-3">
@@ -53,9 +43,8 @@ const ProfileOverview = () => {
           src={state.avatar ? avatar : avatarPlaceholder}
         />
         <Card.Body>
-          <Card.Title>
-            {capitalizeFirstLetter(state.first_name)}{" "}
-            {capitalizeFirstLetter(state.last_name)}
+          <Card.Title style={{ "text-transform": "capitalize" }}>
+            {state.first_name} {state.last_name}
           </Card.Title>
           <hr />
           <Row className="justify-content-center">

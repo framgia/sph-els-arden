@@ -5,10 +5,8 @@ import Row from "react-bootstrap/esm/Row";
 import Image from "react-bootstrap/Image";
 import avatarPlaceholder from "../asset/avatar_placeholder.png";
 import { domain } from "../services/apis";
-import capitalizeFirstLetter from "../utils/capitalizeFirstLetter";
 
-const FollowEntry = (props) => {
-  const { entry } = props;
+const FollowEntry = ({ entry }) => {
   const pageState = useSelector((state) => state.followPage.value);
   const { currentTab } = pageState;
   const data = pageState[currentTab][entry];
@@ -24,9 +22,8 @@ const FollowEntry = (props) => {
           />
         </Col>
         <Col md="auto">
-          <p>
-            {capitalizeFirstLetter(data.user.first_name)}{" "}
-            {capitalizeFirstLetter(data.user.last_name)}
+          <p style={{ "text-transform": "capitalize" }}>
+            {data.user.first_name} {data.user.last_name}
           </p>
         </Col>
         <hr />

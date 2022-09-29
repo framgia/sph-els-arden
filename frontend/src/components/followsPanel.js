@@ -15,12 +15,14 @@ const FollowsPanel = (props) => {
 
   const overview = async (key) => {
     const state = pageState[currentTab][key];
-    const response1 = await profileService.getFollowers(state.profile.user_id);
-    const response2 = await profileService.getFollowings(state.profile.user_id);
+    const followers = await profileService.getFollowers(state.profile.user_id);
+    const followings = await profileService.getFollowings(
+      state.profile.user_id
+    );
     let follow;
 
-    for (const profile in response1.data) {
-      const follower_id = response1.data[profile]["profile"].user_id;
+    for (const profile in followers.data) {
+      const follower_id = followers.data[profile]["profile"].user_id;
       if (follower_id === pageState.id) {
         follow = true;
         break;
@@ -29,8 +31,8 @@ const FollowsPanel = (props) => {
       }
     }
     const initialData = {};
-    initialData.follower = Object.keys(response1.data).length;
-    initialData.following = Object.keys(response2.data).length;
+    initialData.follower = Object.keys(followers.data).length;
+    initialData.following = Object.keys(followings.data).length;
     dispatch(
       setProfile({
         ...profileState,
