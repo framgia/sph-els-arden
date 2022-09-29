@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import createFollowAPI, viewFollowersAPI, viewFollowingsAPI
+from .views import createFollowAPI, viewFollowersAPI, viewFollowingsAPI, deleteFollowAPI
 
 urlpatterns = [
-    path('createFollow', createFollowAPI.as_view(), name='createFollow'),
-    path('followers', viewFollowersAPI.as_view(), name='followers'),
-    path('followings', viewFollowingsAPI.as_view(), name='followings'),
+    path('<int:pk>/create', createFollowAPI.as_view()),
+    path('followers/<int:pk>', viewFollowersAPI.as_view()),
+    path('followings/<int:pk>', viewFollowingsAPI.as_view()),
+    path('<int:pk>/delete', deleteFollowAPI.as_view()),
 ]

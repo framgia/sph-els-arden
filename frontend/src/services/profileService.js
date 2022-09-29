@@ -24,3 +24,19 @@ export function uploadAvatar(user, formData) {
     },
   });
 }
+
+export function getFollowers(id) {
+  return httpService.get(`${api}/follows/followers/${id}`);
+}
+
+export function getFollowings(id) {
+  return httpService.get(`${api}/follows/followings/${id}`);
+}
+
+export function unfollow(id) {
+  return httpService.delete(`${api}/follows/${id}/delete`);
+}
+
+export function follow(id) {
+  return httpService.post(`${api}/follows/${id}/create`);
+}
