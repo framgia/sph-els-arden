@@ -9,12 +9,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./asset/style.css";
 import NavBar from "./components/navbar";
 import userReducer from "./store/user";
+import followReducer from "./store/follow";
+import profileReducer from "./store/profile";
 
 const store = configureStore({
   //collection of reducers
   reducer: {
     registrant: userReducer.registrantReducer,
     login: userReducer.loginReducer,
+    followPage: followReducer.followsReducer,
+    profile: profileReducer.profileReducer,
   },
 });
 

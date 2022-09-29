@@ -30,13 +30,13 @@ class createFollowAPI(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class viewFollowersAPI(APIView):
-    def get(self, request):
+    def get(self, request, pk):
         response_load = {}
         count =0
         payload = getJWTPayload(request)
 
         try:
-            user_profile = Profile.objects.get(user_id=payload['id'])
+            user_profile = Profile.objects.get(user_id=pk)
             followers = Follow.objects.filter(following_id=user_profile.id).values('follower_id')
             
             for follower in followers:
@@ -54,13 +54,13 @@ class viewFollowersAPI(APIView):
             return Response(response_load, status=status.HTTP_400_BAD_REQUEST)
 
 class viewFollowingsAPI(APIView):
-    def get(self, request):
+    def get(self, request, pk):
         response_load = {}
         count = 0
         payload = getJWTPayload(request)
 
         try:
-            user_profile = Profile.objects.get(user_id=payload['id'])
+            user_profile = Profile.objects.get(user_id=pk)
             followings = Follow.objects.filter(follower_id=user_profile.id).values('following_id')
 
             for following in followings:
@@ -78,3 +78,15 @@ class viewFollowingsAPI(APIView):
             return Response(response_load, status=status.HTTP_200_OK)
         except ObjectDoesNotExist:
             return Response(response_load, status=status.HTTP_400_BAD_REQUEST)
+
+class deleteFollowAPI(APIView):
+    def delete(self, request):
+        following_id = request.data["following_id"]
+        follower_id = request.data["follower_id"]
+
+        try:
+            followObj = Follow.objects.filter(follower_id=follower_id, following_id=following_id)
+            followObj.delete()
+            return Response(status=status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
