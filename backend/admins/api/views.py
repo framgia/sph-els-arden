@@ -35,8 +35,17 @@ class CreateQuestionAPI(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class UpdateQuestionAPI(APIView):
+class ViewUpdateDeleteQuestionAPI(APIView):
     permission_classes = [IsAdminUser]
+    def get(self, request, pk):
+
+        try:
+            question = Question.objects.get(id=pk)
+            serialized = QuestionSerializer(question)
+            return Response(serialized.data, status=status.HTTP_200_OK)
+        except Question.DoesNotExist:
+            return Response({'error': "this question does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+
     def patch(self, request, pk):
         try:
             question = Question.objects.get(pk=pk)
@@ -55,8 +64,6 @@ class UpdateQuestionAPI(APIView):
                 Response({'error':'incomplete data'},status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class DeleteQuestionAPI(APIView):
-    permission_classes = [IsAdminUser]
     def delete(self, request, pk):
         try:
             question = Question.objects.get(pk=pk)
@@ -83,7 +90,6 @@ class CategoryQuestions(APIView):
                 serialized = QuestionSerializer(question)
                 response_load[count] = serialized.data
                 count+=1
-
             return Response(response_load, status=status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
