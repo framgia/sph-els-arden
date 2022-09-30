@@ -3,6 +3,7 @@ import { loggedInUser } from "../services/userService";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { logout } from "../services/userService";
+import { guestRoutes, authenticatedRoutes } from "../constants/routes";
 
 const UserContext = createContext(null);
 
@@ -27,24 +28,18 @@ const UserContextProvider = ({ children }) => {
         .then((user) => {
           setUser(user.data);
           setLoading(false);
+
+          guestRoutes.includes(location.pathname) && navigate("home");
         })
-        .catch((error) => {
-          console.log("An error occured");
-          if (
-            location.pathname === "/home" ||
-            location.pathname === "/profile" ||
-            location.pathname === "/profile/follows" ||
-            location.pathname === "/profile/edit"
-          ) {
-            navigate("login");
-          }
+        .catch(() => {
+          authenticatedRoutes.includes(location.pathname) && navigate("login");
         })
         .finally(() => {
           setLoading(false);
         });
     };
     fetchUser();
-  }, []);
+  }, [location.pathname, navigate]);
 
   return (
     <UserContext.Provider value={{ user, logIn, logOut }}>

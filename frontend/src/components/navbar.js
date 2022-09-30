@@ -24,13 +24,13 @@ const NavBar = () => {
             href="/home"
           >
             Home
-          </Nav.Link>{" "}
+          </Nav.Link>
           <Nav.Link
             style={{ color: "white", margin: 10, textDecoration: "none" }}
             href="/profile"
           >
             Profile
-          </Nav.Link>{" "}
+          </Nav.Link>
           <Nav.Link
             style={{ color: "white", margin: 10, textDecoration: "none" }}
             onClick={handleLoginLogout}
