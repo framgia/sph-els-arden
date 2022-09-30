@@ -15,27 +15,20 @@ const NavBar = () => {
   return (
     <Navbar bg="dark" variant="dark" fixed="top">
       <Container className="bg-dark">
-        <Navbar.Brand className="bg-dark" to="/home">
+        <Navbar.Brand className="bg-dark" href="/home">
           E-Learning System
         </Navbar.Brand>
         <Nav className="text-right">
-          <Nav.Link
-            style={{ color: "white", margin: 10, textDecoration: "none" }}
-            href="/home"
-          >
-            Home
-          </Nav.Link>
-          <Nav.Link
-            style={{ color: "white", margin: 10, textDecoration: "none" }}
-            href="/profile"
-          >
-            Profile
-          </Nav.Link>
-          <Nav.Link
-            style={{ color: "white", margin: 10, textDecoration: "none" }}
-            onClick={handleLoginLogout}
-            href={!user ? "/login" : null}
-          >
+          {user ? (
+            <Nav.Link
+              href={user.is_staff ? "/admin/categories" : "/categories"}
+            >
+              Categories
+            </Nav.Link>
+          ) : null}
+          <Nav.Link href="/home">Home</Nav.Link>
+          <Nav.Link href="/profile">Profile</Nav.Link>
+          <Nav.Link onClick={handleLoginLogout} href={!user ? "/login" : null}>
             {user ? "Logout" : "Login"}
           </Nav.Link>
         </Nav>
