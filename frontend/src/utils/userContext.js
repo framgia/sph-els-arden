@@ -28,12 +28,8 @@ const UserContextProvider = ({ children }) => {
         .then((user) => {
           setUser(user.data);
           setLoading(false);
-
-          // guestRoutes.includes(location.pathname) && navigate("home");
         })
-        .catch(() => {
-          // authenticatedRoutes.includes(location.pathname) && navigate("login");
-        })
+        .catch(() => {})
         .finally(() => {});
       setLoading(false);
     };
@@ -41,15 +37,14 @@ const UserContextProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    !loading &&
-      !user &&
-      authenticatedRoutes.includes(location.pathname) &&
-      navigate("login");
-    !loading &&
-      user &&
-      guestRoutes.includes(location.pathname) &&
-      navigate("home");
-  }, [location.pathname, loading, user, navigate]);
+    if (!loading) {
+      if (user) {
+        guestRoutes.includes(location.pathname) && navigate("home");
+      } else {
+        authenticatedRoutes.includes(location.pathname) && navigate("login");
+      }
+    }
+  }, [location.pathname, loading, user]);
 
   return (
     <UserContext.Provider value={{ user, logIn, logOut }}>
