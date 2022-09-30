@@ -14,8 +14,8 @@ import { getErrorMessage } from "../utils/validation";
 const EditProfile = () => {
   const [state, setState] = useState();
   const [errors, setErrors] = useState({});
-
   const navigate = useNavigate();
+
   let avatarFile = {};
 
   useEffect(() => {

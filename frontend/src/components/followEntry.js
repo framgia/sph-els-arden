@@ -22,7 +22,7 @@ const FollowEntry = ({ entry }) => {
           />
         </Col>
         <Col md="auto">
-          <p style={{ "text-transform": "capitalize" }}>
+          <p style={{ textTransform: "capitalize" }}>
             {data.user.first_name} {data.user.last_name}
           </p>
         </Col>

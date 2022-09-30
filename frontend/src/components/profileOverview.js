@@ -43,7 +43,7 @@ const ProfileOverview = () => {
           src={state.avatar ? avatar : avatarPlaceholder}
         />
         <Card.Body>
-          <Card.Title style={{ "text-transform": "capitalize" }}>
+          <Card.Title style={{ textTransform: "capitalize" }}>
             {state.first_name} {state.last_name}
           </Card.Title>
           <hr />

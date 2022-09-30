@@ -1,7 +1,6 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
@@ -12,11 +11,13 @@ import InputField from "../components/input";
 import { login } from "../store/user";
 import { validate, validateField, getErrorPayload } from "../utils/validation";
 import * as userService from "../services/userService";
+import { UserContext } from "../utils/userContext";
 
 const Login = () => {
   const userLogin = useSelector((state) => state.login.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { logIn } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,9 +32,8 @@ const Login = () => {
         await userService.login(userLogin);
         const payload = { ...userLogin, success: true };
         dispatch(login(payload));
-        const logged_user = await userService.loggedInUser();
-        const admin = logged_user.data.is_staff;
-        document.cookie = "admin=" + admin;
+        const { data } = await userService.loggedInUser();
+        logIn(data);
         navigate("/home");
       } catch (exception) {
         if (exception.response) {
