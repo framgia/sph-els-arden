@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import Container from "react-bootstrap/Container";
-import getCookie from "../utils/getCookie";
+import { UserContext } from "../utils/userContext";
 
 const Dashboard = () => {
-  const admin = getCookie("admin");
+  const { user } = useContext(UserContext);
 
   return (
     <Container>
-      {admin ? <h1>Admin Dashboard</h1> : <h1>Dashboard</h1>}
+      {user ? (
+        user.is_staff ? (
+          <h1>Admin Dashboard</h1>
+        ) : (
+          <h1>Dashboard</h1>
+        )
+      ) : null}
     </Container>
   );
 };

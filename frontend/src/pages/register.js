@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
@@ -12,8 +12,12 @@ import { register } from "../store/user";
 import InputField from "../components/input";
 import { validate, validateField, getErrorPayload } from "../utils/validation";
 import * as userService from "../services/userService";
+import getCookie from "../utils/getCookie";
 
 const Register = () => {
+  const isAuthenticated = getCookie("isAuthenticated");
+  const navigate = useNavigate();
+  if (isAuthenticated) navigate("/home");
   const registrant = useSelector((state) => state.registrant.value);
   const dispatch = useDispatch();
 
