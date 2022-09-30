@@ -29,17 +29,27 @@ const UserContextProvider = ({ children }) => {
           setUser(user.data);
           setLoading(false);
 
-          guestRoutes.includes(location.pathname) && navigate("home");
+          // guestRoutes.includes(location.pathname) && navigate("home");
         })
         .catch(() => {
-          authenticatedRoutes.includes(location.pathname) && navigate("login");
+          // authenticatedRoutes.includes(location.pathname) && navigate("login");
         })
-        .finally(() => {
-          setLoading(false);
-        });
+        .finally(() => {});
+      setLoading(false);
     };
     fetchUser();
-  }, [location.pathname, navigate]);
+  }, []);
+
+  useEffect(() => {
+    !loading &&
+      !user &&
+      authenticatedRoutes.includes(location.pathname) &&
+      navigate("login");
+    !loading &&
+      user &&
+      guestRoutes.includes(location.pathname) &&
+      navigate("home");
+  }, [location.pathname, loading, user, navigate]);
 
   return (
     <UserContext.Provider value={{ user, logIn, logOut }}>
