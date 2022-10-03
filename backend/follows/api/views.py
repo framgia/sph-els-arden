@@ -14,6 +14,8 @@ from users.api.serializers import UserProfileSerializer
 from follows.models import Follow
 from profiles.models import Profile
 from users.models import User
+from activities.models import Activity
+from django.contrib.contenttypes.models import ContentType
 
 class createFollowAPI(APIView):
     def post(self, request, pk):
@@ -24,7 +26,12 @@ class createFollowAPI(APIView):
 
         if serializer.is_valid():
             try:
-                serializer.save()
+                followObj = serializer.save()
+                activity = Activity(
+                    content_type = ContentType.objects.get_for_model(followObj), 
+                    object_id = followObj.id
+                )
+                activity.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except IntegrityError:
                 Response({'message':'duplicate entry'},status=status.HTTP_400_BAD_REQUEST)
