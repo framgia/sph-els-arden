@@ -2,11 +2,13 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from django.db import IntegrityError
 
 from admins.models import Category, Question
+from users.models import User
 from .serializers import CategorySerializer, QuestionSerializer
+from users.api.serializers import UserProfileSerializer, UserSerializer
 
 class CategoriesTable(ListCreateAPIView):
     queryset = Category.objects.all()
@@ -93,3 +95,8 @@ class CategoryQuestions(APIView):
             return Response(response_load, status=status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class ViewUsers(ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
