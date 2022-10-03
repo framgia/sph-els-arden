@@ -14,7 +14,10 @@ const AdminCategories = () => {
   const [categories, setCategories] = useState();
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState({
+    title: "",
+    description: "",
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +43,7 @@ const AdminCategories = () => {
   };
 
   const handleEdit = (id) => {
-    navigate(`/admin/category/edit/${id}`);
+    navigate(`/admin/category/${id}/edit`);
   };
 
   return (
@@ -85,7 +88,6 @@ const AdminCategories = () => {
                             Edit
                           </Button>
                           <Button
-                            // onClick={() => handleDelete(categories[key].id)}
                             onClick={() => showModal(categories[key])}
                             size="sm"
                             variant="danger"
@@ -103,10 +105,10 @@ const AdminCategories = () => {
       </Row>
       <Modal show={show} onHide={closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Delete {selected ? selected.title : null}?</Modal.Title>
+          <Modal.Title>Delete {selected.title}?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete {selected ? selected.title : null}?
+          Are you sure you want to delete {selected.title}?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeModal}>

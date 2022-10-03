@@ -27,7 +27,7 @@ function App() {
             <Route path="/profile/edit" element={<EditProfile />} />
             <Route path="/profile/follows" element={<Follows />} />
             <Route path="/admin/categories" element={<AdminCategories />} />
-            <Route path="/admin/category/edit/:id" element={<EditCategory />} />
+            <Route path="/admin/category/:id/edit" element={<EditCategory />} />
             <Route path="/admin/category/add" element={<AddCategory />} />
           </Routes>
         </Container>

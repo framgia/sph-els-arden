@@ -12,17 +12,15 @@ const EditCategory = () => {
 
   const [state, setState] = useState(null);
   const [error, setError] = useState();
-  const [success, setSuccess] = useState(false);
 
   const handleSave = async () => {
     editCategory(state)
       .then(() => {
-        setSuccess(true);
+        navigate("/admin/categories");
       })
       .catch(({ response }) => {
         setError(response.data);
-      })
-      .finally(() => {});
+      });
   };
 
   const handleChange = ({ currentTarget: input }) => {
@@ -39,10 +37,6 @@ const EditCategory = () => {
     };
     fetchData();
   }, []);
-
-  useEffect(() => {
-    if (success) navigate("/admin/categories");
-  }, [success]);
 
   return (
     <Container fluid>

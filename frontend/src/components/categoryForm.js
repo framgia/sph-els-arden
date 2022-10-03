@@ -10,8 +10,8 @@ const CategoryForm = ({ state, handleChange, handleSave, error }) => {
         label="Title"
         type="text"
         onChange={handleChange}
-        value={state ? state.title : ""}
-        error={error ? error.title : null}
+        value={state?.title || ""}
+        error={error?.title || null}
       />
       <Form.Group className="mb-3" controlId="description">
         <Form.Label>Description</Form.Label>
@@ -20,7 +20,7 @@ const CategoryForm = ({ state, handleChange, handleSave, error }) => {
           rows={10}
           placeholder="Description"
           onChange={handleChange}
-          value={state ? state.description : ""}
+          value={state?.description || ""}
         />
         {error && (
           <Form.Text id={error.description} muted>

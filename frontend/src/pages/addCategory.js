@@ -11,29 +11,20 @@ const AddCategory = () => {
 
   const [state, setState] = useState(null);
   const [error, setError] = useState();
-  const [success, setSuccess] = useState(false);
 
   const handleSave = async () => {
     addCategory(state)
       .then(() => {
-        setSuccess(true);
+        navigate("/admin/categories");
       })
       .catch(({ response }) => {
         setError(response.data);
-      })
-      .finally(() => {});
+      });
   };
 
   const handleChange = ({ currentTarget: input }) => {
-    const name = input.id;
-    const value = input.value;
-
-    setState({ ...state, [name]: value });
+    setState({ ...state, [input.id]: input.value });
   };
-
-  useEffect(() => {
-    if (success) navigate("/admin/categories");
-  }, [success]);
 
   return (
     <Container fluid>
