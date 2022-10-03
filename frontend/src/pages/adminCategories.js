@@ -1,51 +1,61 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Modal from "react-bootstrap/Modal";
 import Pagination from "../components/pagination";
 import { UserContext } from "../utils/userContext";
-
-const content = [
-  {
-    id: 1,
-    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin efficitur leo sit amet lorem rutrum, eget aliquam metus viverra. Maecenas egestas, neque sed placerat dignissim, neque turpis tempus purus, vel pulvinar lacus erat nec mauris. Ut hendrerit gravida ex vehicula sagittis. Pellentesque sollicitudin nulla nec libero porttitor pharetra. Cras tempus tellus non feugiat finibus. Pellentesque fringilla rutrum nisi ut malesuada. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nullam sem ipsum, euismod eu enim sit amet, rutrum dictum mi. Curabitur cursus sagittis ipsum sed interdum. Class aptent taciti sociosqu ad litora torquent per conubia nostra.",
-  },
-  {
-    id: 2,
-    title: "Title 1",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin efficitur leo sit amet lorem rutrum, eget aliquam metus viverra. Maecenas egestas, neque sed placerat dignissim, neque turpis tempus purus, vel pulvinar lacus erat nec mauris. Ut hendrerit gravida ex vehicula sagittis. Pellentesque sollicitudin nulla nec libero porttitor pharetra. Cras tempus tellus non feugiat finibus. Pellentesque fringilla rutrum nisi ut malesuada. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nullam sem ipsum, euismod eu enim sit amet, rutrum dictum mi. Curabitur cursus sagittis ipsum sed interdum. Class aptent taciti sociosqu ad litora torquent per conubia nostra.",
-  },
-  {
-    id: 3,
-    title: "Title 1",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin efficitur leo sit amet lorem rutrum, eget aliquam metus viverra. Maecenas egestas, neque sed placerat dignissim, neque turpis tempus purus, vel pulvinar lacus erat nec mauris. Ut hendrerit gravida ex vehicula sagittis. Pellentesque sollicitudin nulla nec libero porttitor pharetra. Cras tempus tellus non feugiat finibus. Pellentesque fringilla rutrum nisi ut malesuada. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nullam sem ipsum, euismod eu enim sit amet, rutrum dictum mi. Curabitur cursus sagittis ipsum sed interdum. Class aptent taciti sociosqu ad litora torquent per conubia nostra.",
-  },
-  {
-    id: 4,
-    title: "Title 1",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin efficitur leo sit amet lorem rutrum, eget aliquam metus viverra. Maecenas egestas, neque sed placerat dignissim, neque turpis tempus purus, vel pulvinar lacus erat nec mauris. Ut hendrerit gravida ex vehicula sagittis. Pellentesque sollicitudin nulla nec libero porttitor pharetra. Cras tempus tellus non feugiat finibus. Pellentesque fringilla rutrum nisi ut malesuada. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nullam sem ipsum, euismod eu enim sit amet, rutrum dictum mi. Curabitur cursus sagittis ipsum sed interdum. Class aptent taciti sociosqu ad litora torquent per conubia nostra.",
-  },
-  {
-    id: 5,
-    title: "Title 1",
-    description: "qwe",
-  },
-];
+import * as adminService from "../services/adminService";
+import { Link, useNavigate } from "react-router-dom";
 
 const AdminCategories = () => {
-  const { user } = useContext(UserContext);
+  const [categories, setCategories] = useState();
+  const navigate = useNavigate();
+  const [show, setShow] = useState(false);
+  const [selected, setSelected] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await adminService.getCategories();
+      setCategories(data);
+    };
+    fetchData();
+  }, []);
+
+  const closeModal = () => setShow(false);
+  const showModal = (category) => {
+    setSelected(category);
+    setShow(true);
+  };
+
+  const handleDelete = async () => {
+    const { status } = await adminService.deleteCategory(selected.id);
+    if (status === 204) {
+      const { data } = await adminService.getCategories();
+      setCategories(data);
+    }
+    closeModal();
+  };
+
+  const handleEdit = (id) => {
+    navigate(`/admin/category/edit/${id}`);
+  };
+
   return (
     <Container fluid>
       <Row>
         <Col>
           <h1>Admin | Categories</h1>
+          <div className="align-items-end">
+            <Button
+              variant="success"
+              onClick={() => navigate("/admin/category/add")}
+            >
+              Add New Category
+            </Button>
+          </div>
           <Table striped bordered hover bgcolor="white">
             <thead className="text-center">
               <tr>
@@ -55,27 +65,58 @@ const AdminCategories = () => {
               </tr>
             </thead>
             <tbody>
-              {content.map((category) => (
-                <tr key={category.id}>
-                  <td className="align-middle">{category.title}</td>
-                  <td className="align-middle">{category.description}</td>
-                  <td className="align-middle">
-                    <div className="d-grid gap-2">
-                      <Button size="sm">Add word</Button>
-                      <Button size="sm" variant="warning">
-                        Edit
-                      </Button>
-                      <Button size="sm" variant="danger">
-                        Delete
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {categories
+                ? Object.keys(categories).map((key) => (
+                    <tr key={categories[key].id}>
+                      <td className="align-middle text-capitalize">
+                        {categories[key].title}
+                      </td>
+                      <td className="align-middle">
+                        {categories[key].description}
+                      </td>
+                      <td className="align-middle">
+                        <div className="d-grid gap-2">
+                          <Button size="sm">Add word</Button>
+                          <Button
+                            onClick={() => handleEdit(categories[key].id)}
+                            size="sm"
+                            variant="warning"
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            // onClick={() => handleDelete(categories[key].id)}
+                            onClick={() => showModal(categories[key])}
+                            size="sm"
+                            variant="danger"
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                : null}
             </tbody>
           </Table>
         </Col>
       </Row>
+      <Modal show={show} onHide={closeModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete {selected ? selected.title : null}?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete {selected ? selected.title : null}?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeModal}>
+            No
+          </Button>
+          <Button variant="primary" onClick={handleDelete}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import CategoryForm from "../components/categoryForm";
-import { useNavigate, useParams } from "react-router-dom";
-import { editCategory, getCategory } from "../services/adminService";
+import { useNavigate } from "react-router-dom";
+import { addCategory } from "../services/adminService";
 import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
 
-const EditCategory = () => {
-  const { id } = useParams();
+const AddCategory = () => {
   const navigate = useNavigate();
 
   const [state, setState] = useState(null);
@@ -15,7 +14,7 @@ const EditCategory = () => {
   const [success, setSuccess] = useState(false);
 
   const handleSave = async () => {
-    editCategory(state)
+    addCategory(state)
       .then(() => {
         setSuccess(true);
       })
@@ -33,14 +32,6 @@ const EditCategory = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await getCategory(id);
-      setState(data);
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
     if (success) navigate("/admin/categories");
   }, [success]);
 
@@ -48,7 +39,7 @@ const EditCategory = () => {
     <Container fluid>
       <Row>
         <Col md={{ span: 6, offset: 3 }}>
-          <h1>Edit {state ? state.title : "Category"}</h1>
+          <h1>Add Category</h1>
           <CategoryForm
             state={state}
             handleChange={handleChange}
@@ -61,4 +52,4 @@ const EditCategory = () => {
   );
 };
 
-export default EditCategory;
+export default AddCategory;
