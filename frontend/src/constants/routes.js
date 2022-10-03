@@ -4,4 +4,5 @@ export const authenticatedRoutes = [
   "/profile",
   "/profile/follows",
   "/profile/edit",
+  "/admin/categories",
 ];

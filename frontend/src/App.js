@@ -11,6 +11,7 @@ import NavBar from "./components/navbar";
 import AdminCategories from "./pages/adminCategories";
 import { UserContextProvider } from "./utils/userContext";
 import EditCategory from "./pages/editCategory";
+import AddCategory from "./pages/addCategory";
 
 function App() {
   return (
@@ -26,7 +27,8 @@ function App() {
             <Route path="/profile/edit" element={<EditProfile />} />
             <Route path="/profile/follows" element={<Follows />} />
             <Route path="/admin/categories" element={<AdminCategories />} />
-            <Route path="/admin/category/edit" element={<EditCategory />} />
+            <Route path="/admin/category/:id/edit" element={<EditCategory />} />
+            <Route path="/admin/category/add" element={<AddCategory />} />
           </Routes>
         </Container>
       </UserContextProvider>

@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useReducer } from "react";
 import { loggedInUser } from "../services/userService";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -29,9 +29,10 @@ const UserContextProvider = ({ children }) => {
           setUser(user.data);
           setLoading(false);
         })
-        .catch(() => {})
+        .catch(() => {
+          setLoading(false);
+        })
         .finally(() => {});
-      setLoading(false);
     };
     fetchUser();
   }, []);

@@ -1,3 +1,4 @@
+from email import message
 from django.core.validators import MinLengthValidator, MinValueValidator, RegexValidator
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
@@ -15,6 +16,7 @@ class AdminSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
+    total_questions = serializers.IntegerField(required=False, default=0)
 
     class Meta:
         model = Category
@@ -23,13 +25,13 @@ class CategorySerializer(serializers.ModelSerializer):
                 'title': {
                     'validators': [
                         UniqueValidator(
-                            queryset=Category.objects.all()
+                            queryset=Category.objects.all(), message=("Title already exists.")
                         ),
-                        MinLengthValidator(limit_value=2)
+                        MinLengthValidator(limit_value=2, message=("Should be at least 2 characters long"))
                     ]
                 },
                 'description' :{
-                    'validators': [MinLengthValidator(limit_value=10)]
+                    'validators': [MinLengthValidator(limit_value=10, message=("It should be 10 characters long"))]
                 },
                 'total_questions' :{
                     'validators': [MinValueValidator(limit_value=0)]
