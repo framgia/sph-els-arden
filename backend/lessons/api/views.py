@@ -1,5 +1,6 @@
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.response import Response
 from django.db import IntegrityError
 from django.contrib.contenttypes.models import ContentType
@@ -8,6 +9,7 @@ from activities.models import Activity
 from lessons.models import Lesson
 from admins.models import Category
 from .serializers import CreateLessonSerializer
+from admins.api.serializers import CategorySerializer
 
 class CreateLesson(APIView):
     def post(self, request, pk):
@@ -34,3 +36,7 @@ class CreateLesson(APIView):
                 Response({'error':'duplicate entry'},status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CategoriesView(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
