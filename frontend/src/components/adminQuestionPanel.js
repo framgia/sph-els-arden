@@ -10,7 +10,7 @@ const QuestionPanel = ({ data }) => {
     <Container className="pt-3 pb-3 mt-3 bg-light rounded">
       <Row>
         <Col>
-          <p className="fs-4">Word</p>
+          <p className="fs-4 pb-2">Word</p>
           <InputField name="word" value={data.word} type="text" />
         </Col>
         <Col>
@@ -39,8 +39,20 @@ const QuestionPanel = ({ data }) => {
             label="Choice 3"
             type="text"
           />
+          <Row>
+            <Col md={{ span: 6 }} className="d-grid gap-2">
+              <Button fill variant="primary">
+                Save
+              </Button>
+            </Col>
+            <Col md={{ span: 6 }} className="d-grid gap-2">
+              <Button fill variant="danger">
+                Delete
+              </Button>
+            </Col>
+          </Row>
         </Col>
-        <Row>
+        {/* <Row>
           <Col md={{ span: 3, offset: 6 }} className="d-grid gap-2">
             <Button fill variant="primary">
               Save
@@ -51,7 +63,7 @@ const QuestionPanel = ({ data }) => {
               Delete
             </Button>
           </Col>
-        </Row>
+        </Row> */}
       </Row>
     </Container>
   );
