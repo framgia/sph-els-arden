@@ -4,10 +4,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 
 from admins.models import Category, Question
 from users.models import User
+from profiles.models import Profile
 from .serializers import CategorySerializer, QuestionSerializer
+from profiles.api.serializers import Profile
 from users.api.serializers import UserProfileSerializer, UserSerializer
 
 class CategoriesTable(ListCreateAPIView):
@@ -96,7 +99,21 @@ class CategoryQuestions(APIView):
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class ViewUsers(ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class ViewUsers(APIView):
     permission_classes = [IsAdminUser]
+    def get(self, request):
+        response_load = {}
+        count = 0
+        profiles = Profile.objects.all().values()
+
+        for profile in profiles:
+            entry= {}
+            user = User.objects.get(id=profile['user_id_id'])
+            userSerialized = UserSerializer(user)
+            print(userSerialized.data)
+            entry['profile'] = profile
+            entry['user'] = userSerialized.data
+            response_load[count] = entry
+            count+=1
+
+        return Response(response_load, status=status.HTTP_200_OK)
