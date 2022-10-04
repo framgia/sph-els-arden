@@ -13,6 +13,7 @@ import { UserContextProvider } from "./utils/userContext";
 import EditCategory from "./pages/editCategory";
 import AddCategory from "./pages/addCategory";
 import AdminUserList from "./pages/adminUsersList";
+import Categories from "./pages/categories";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route path="/admin/category/:id/edit" element={<EditCategory />} />
             <Route path="/admin/category/add" element={<AddCategory />} />
             <Route path="/admin/users" element={<AdminUserList />} />
+            <Route path="/categories" element={<Categories />} />
           </Routes>
         </Container>
       </UserContextProvider>
