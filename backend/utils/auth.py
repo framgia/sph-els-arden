@@ -18,6 +18,8 @@ class Auth(BaseAuthentication):
         except jwt.ExpiredSignatureError:
             return None
 
-
-        user = User.objects.get(id=payload['id'])
+        try:
+            user = User.objects.get(id=payload['id'])
+        except:
+            return None
         return (user, None)
