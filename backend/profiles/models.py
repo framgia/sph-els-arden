@@ -10,3 +10,10 @@ class Profile(models.Model):
 
     def __int__(self):
         return self.user_id
+
+class LearnedWord(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    word = models.CharField(max_length=50, blank=False, null=False)
+
+    def __str__(self):
+        return self.word
