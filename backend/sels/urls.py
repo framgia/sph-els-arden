@@ -10,6 +10,7 @@ urlpatterns = [
     path('api/follows/', include('follows.api.urls')),
     path('api/admin/', include('admins.api.urls')),
     path('api/lessons/', include('lessons.api.urls')),
+    path('api/activities/', include('activities.api.urls')),
 ]
 
 if settings.DEBUG:

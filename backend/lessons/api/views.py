@@ -1,9 +1,9 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAdminUser
-from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
 from django.db import IntegrityError
+from django.contrib.contenttypes.models import ContentType
+from activities.models import Activity
 
 from lessons.models import Lesson
 from admins.models import Category
@@ -23,7 +23,12 @@ class CreateLesson(APIView):
         serializer = CreateLessonSerializer(data=load)
         if serializer.is_valid():
             try:
-                serializer.save()
+                lessonObj = serializer.save()
+                activity = Activity(
+                    content_type = ContentType.objects.get_for_model(lessonObj), 
+                    object_id = lessonObj.id
+                )
+                activity.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except IntegrityError:
                 Response({'error':'duplicate entry'},status=status.HTTP_400_BAD_REQUEST)
