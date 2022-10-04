@@ -1,12 +1,13 @@
 from msilib.schema import AppId
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from django.contrib.auth.hashers import check_password
 
-from profiles.models import Profile
+from profiles.models import Profile, LearnedWord
 from users.models import User
-from .serializers import ProfileSerializer, AvatarSerializer, ProfileIDSSerializer
+from .serializers import ProfileSerializer, AvatarSerializer, ProfileIDSSerializer, LearnedWordSerializer
 from users.api.serializers import UserProfileSerializer, UserProfileUpdateSerializer
 from utils.jwt_payload import getJWTPayload
 
@@ -101,3 +102,12 @@ class viewOtherProfile(APIView):
         }
 
         return Response(response_load, status=status.HTTP_200_OK)
+
+class LearnedWordsTable(ListCreateAPIView):
+    queryset = LearnedWord.objects.all()
+    serializer_class = LearnedWordSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(
+            user_id=self.kwargs['pk']
+        )

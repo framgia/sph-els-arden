@@ -1,7 +1,7 @@
 from dataclasses import fields
 from rest_framework import serializers
 
-from profiles.models import Profile
+from profiles.models import Profile, LearnedWord
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
@@ -13,7 +13,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class ProfileIDSSerializer(serializers.ModelSerializer):
-    # user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
 
     class Meta:
         model = Profile
@@ -23,3 +22,8 @@ class AvatarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('id', 'avatar')
+
+class LearnedWordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LearnedWord
+        fields = "__all__"
