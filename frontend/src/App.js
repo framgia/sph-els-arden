@@ -14,6 +14,7 @@ import EditCategory from "./pages/editCategory";
 import AddCategory from "./pages/addCategory";
 import AdminUserList from "./pages/adminUsersList";
 import Categories from "./pages/categories";
+import AdminQuestions from "./pages/adminQuestions";
 
 function App() {
   return (
@@ -33,6 +34,10 @@ function App() {
             <Route path="/admin/category/add" element={<AddCategory />} />
             <Route path="/admin/users" element={<AdminUserList />} />
             <Route path="/categories" element={<Categories />} />
+            <Route
+              path="/admin/category/:id/questions"
+              element={<AdminQuestions />}
+            />
           </Routes>
         </Container>
       </UserContextProvider>
