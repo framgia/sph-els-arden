@@ -19,35 +19,14 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      let follow;
-      const followers = await profileService.getFollowers(id ? id : user.id);
-      const followings = await profileService.getFollowings(id ? id : user.id);
-      const currentProfile = await profileService.getCurrentProfile();
-      const { data } = id
-        ? await profileService.getOtherProfile(id)
-        : currentProfile;
-
-      let viewingOwn = !id || user.id == id;
-
-      for (const profile in followers.data) {
-        const follower_id = followers.data[profile]["profile"].user_id;
-        if (follower_id === user.id) {
-          follow = true;
-          break;
-        } else {
-          follow = false;
-        }
-      }
+      const profileData = await profileService.getProfilePageData(
+        id ? id : user.id
+      );
 
       dispatch(
         setProfile({
           ...profileState,
-          ...data.user,
-          ...data.profile,
-          follower: Object.keys(followers.data).length,
-          following: Object.keys(followings.data).length,
-          viewingOwn,
-          follow,
+          ...profileData.data,
         })
       );
     };
@@ -57,7 +36,7 @@ const Profile = () => {
     <Container fluid>
       <Row>
         <Col md={3}>
-          <ProfileOverview otherUserID={id} />
+          <ProfileOverview />
         </Col>
         <Col lg>
           <ActivitiesPanel otherUserID={id} />

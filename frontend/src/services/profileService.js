@@ -44,3 +44,7 @@ export function follow(id) {
 export function getOtherProfile(id) {
   return httpService.get(`${api}/profiles/profile/${id}`);
 }
+
+export function getProfilePageData(id) {
+  return httpService.get(`${api}/profiles/data/${id}`);
+}

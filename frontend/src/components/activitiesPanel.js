@@ -18,7 +18,7 @@ const ActivitiesPanel = ({ otherUserID }) => {
       setActivities(data);
     };
     fetchData();
-  }, [user.id]);
+  }, []);
 
   return (
     <Container fluid className="mt-3">

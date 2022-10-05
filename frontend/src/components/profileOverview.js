@@ -10,7 +10,7 @@ import { setProfile } from "../store/profile";
 import { setPage } from "../store/follow";
 import * as profileService from "../services/profileService";
 
-const ProfileOverview = ({ otherUserID }) => {
+const ProfileOverview = () => {
   const state = useSelector((state) => state.profile.value);
   const pageState = useSelector((state) => state.followPage.value);
   const dispatch = useDispatch();
