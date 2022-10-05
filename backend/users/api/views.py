@@ -7,8 +7,11 @@ from rest_framework.permissions import BasePermission, IsAuthenticated, AllowAny
 from django.contrib.auth.hashers import make_password
 import jwt, datetime
 
+from sels.settings import MEDIA_URL
 from .serializers import UserSerializer
 from users.models import User
+from profiles.models import Profile
+from profiles.api.serializers import ProfileSerializer
 
 JWT_SECRET = "sels-project"
 
@@ -88,3 +91,24 @@ class UserAPI(APIView):
         serializer = UserSerializer(user)
 
         return Response(serializer.data)
+
+class ViewUsers(APIView):
+    def get(self, request):
+        domain = request.META['HTTP_HOST']
+        avatarPrefix = domain+MEDIA_URL
+
+        response_load = {}
+        count = 0
+        profiles = Profile.objects.all().values()
+
+        for profile in profiles:
+            entry= {}
+            user = User.objects.get(id=profile['user_id_id'])
+            userSerialized = UserSerializer(user)
+            profile['avatar'] = avatarPrefix+profile['avatar']
+            entry['profile'] = profile
+            entry['user'] = userSerialized.data
+            response_load[count] = entry
+            count+=1
+
+        return Response(response_load, status=status.HTTP_200_OK)

@@ -25,3 +25,7 @@ export function loggedInUser() {
 export function logout() {
   return httpService.post(`${api}/logout`);
 }
+
+export function allUsers() {
+  return httpService.get(`${api}/users`);
+}
