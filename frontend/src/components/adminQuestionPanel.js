@@ -52,18 +52,6 @@ const QuestionPanel = ({ data }) => {
             </Col>
           </Row>
         </Col>
-        {/* <Row>
-          <Col md={{ span: 3, offset: 6 }} className="d-grid gap-2">
-            <Button fill variant="primary">
-              Save
-            </Button>
-          </Col>
-          <Col md={{ span: 3 }} className="d-grid gap-2">
-            <Button fill variant="danger">
-              Delete
-            </Button>
-          </Col>
-        </Row> */}
       </Row>
     </Container>
   );
