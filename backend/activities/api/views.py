@@ -27,7 +27,7 @@ class GetActivitiesAPI(APIView):
         response_load = {}
         count =0
 
-        activities = Activity.objects.filter(Q(lesson__user_id=pk) | Q(follow__follower_id=profile.id)).order_by('activity_date')
+        activities = Activity.objects.filter(Q(lesson__profile_id=profile.id) | Q(follow__follower_id=profile.id)).order_by('-activity_date')
         for activity in activities:
             serialized = ActivitySerializer(activity)
             response_load[count] = serialized.data

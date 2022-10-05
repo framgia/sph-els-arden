@@ -10,16 +10,13 @@ import { setProfile } from "../store/profile";
 import { setPage } from "../store/follow";
 import * as profileService from "../services/profileService";
 
-const ProfileOverview = () => {
+const ProfileOverview = ({ otherUserID }) => {
   const state = useSelector((state) => state.profile.value);
   const pageState = useSelector((state) => state.followPage.value);
   const dispatch = useDispatch();
   const avatar = domain.concat(state.avatar);
 
   const handleFollow = async () => {
-    const { data } = await profileService.getCurrentProfile();
-    const id = data.profile.id;
-
     try {
       if (state.follow) {
         await profileService.unfollow(state.id);

@@ -6,8 +6,8 @@ from django.db import IntegrityError
 from django.contrib.contenttypes.models import ContentType
 from activities.models import Activity
 
-from lessons.models import Lesson
 from admins.models import Category, Question
+from profiles.models import Profile
 from .serializers import CreateLessonSerializer
 from admins.api.serializers import CategorySerializer, QuestionSerializer
 
@@ -18,8 +18,10 @@ class CreateLesson(APIView):
         except Category.DoesNotExist:
             return Response({'message': "This category does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
+        profile = Profile.objects.get(user_id=pk)
+        print(profile.id)
         load = {
-            'user_id' : request.user.id,
+            'profile_id' : profile.id,
             'category_id' : pk
         }
         serializer = CreateLessonSerializer(data=load)

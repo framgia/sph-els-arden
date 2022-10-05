@@ -1,13 +1,13 @@
 from msilib.schema import AppId
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.response import Response
 from django.contrib.auth.hashers import check_password
 
 from profiles.models import Profile, LearnedWord
 from users.models import User
-from .serializers import ProfileSerializer, AvatarSerializer, ProfileIDSSerializer, LearnedWordSerializer
+from .serializers import NestedProfileSerializer, ProfileSerializer, AvatarSerializer, LearnedWordSerializer
 from users.api.serializers import UserProfileSerializer, UserProfileUpdateSerializer
 from utils.jwt_payload import getJWTPayload
 
@@ -73,7 +73,7 @@ class AvatarUploadAPI(APIView):
 class viewProfile(APIView):
     def get(self, request):
         payload = getJWTPayload(request)
-        profile = ProfileIDSSerializer(Profile.objects.get(user_id=payload['id']))
+        profile = NestedProfileSerializer(Profile.objects.get(user_id=payload['id']))
         user = UserProfileSerializer(User.objects.get(id=payload['id']))
 
         response_load = {
@@ -87,7 +87,6 @@ class viewOtherProfile(APIView):
     def get(self, request, pk):
         data = request.data
         try:
-            # profile = Profile.objects.get(pk=pk)
             profile = ProfileSerializer(Profile.objects.get(user_id=pk))
             user = UserProfileSerializer(User.objects.get(id=pk))
 
