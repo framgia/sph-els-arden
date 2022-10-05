@@ -20,11 +20,14 @@ const NavBar = () => {
         </Navbar.Brand>
         <Nav className="text-right">
           {user ? (
-            <Nav.Link
-              href={user.is_staff ? "/admin/categories" : "/categories"}
-            >
-              Categories
-            </Nav.Link>
+            <React.Fragment>
+              <Nav.Link href="/users">Users List</Nav.Link>
+              <Nav.Link
+                href={user.is_staff ? "/admin/categories" : "/categories"}
+              >
+                Categories
+              </Nav.Link>
+            </React.Fragment>
           ) : null}
           <Nav.Link href="/home">Home</Nav.Link>
           <Nav.Link href="/profile">Profile</Nav.Link>

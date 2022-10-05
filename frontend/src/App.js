@@ -12,7 +12,7 @@ import AdminCategories from "./pages/adminCategories";
 import { UserContextProvider } from "./utils/userContext";
 import EditCategory from "./pages/editCategory";
 import AddCategory from "./pages/addCategory";
-import AdminUserList from "./pages/adminUsersList";
+import UserList from "./pages/usersList";
 import Categories from "./pages/categories";
 import AdminQuestions from "./pages/adminQuestions";
 
@@ -33,7 +33,7 @@ function App() {
             <Route path="/admin/categories" element={<AdminCategories />} />
             <Route path="/admin/category/:id/edit" element={<EditCategory />} />
             <Route path="/admin/category/add" element={<AddCategory />} />
-            <Route path="/admin/users" element={<AdminUserList />} />
+            <Route path="/users" element={<UserList />} />
             <Route path="/categories" element={<Categories />} />
             <Route
               path="/admin/category/:id/questions"
