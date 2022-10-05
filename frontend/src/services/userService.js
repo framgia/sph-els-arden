@@ -27,5 +27,5 @@ export function logout() {
 }
 
 export function allUsers() {
-  return httpService.get(`${api}`);
+  return httpService.get(`${api}/users`);
 }
