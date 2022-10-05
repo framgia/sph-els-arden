@@ -88,7 +88,7 @@ WSGI_APPLICATION = 'sels.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sels_database',
+        'NAME': 'sels_database_2',
         'USER': 'dbadmin',
         'PASSWORD': 'adminadmin',
         'HOST': 'localhost',

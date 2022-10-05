@@ -1,6 +1,8 @@
 from  rest_framework.validators import UniqueTogetherValidator
 from rest_framework import serializers
 from lessons.models import Lesson
+from admins.api.serializers import CategorySerializer
+from profiles.api.serializers import NestedProfileSerializer
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -21,7 +23,15 @@ class CreateLessonSerializer(serializers.ModelSerializer):
         validators = [
             UniqueTogetherValidator(
                 queryset=Lesson.objects.all(),
-                fields=['user_id', 'category_id'], 
+                fields=['profile_id', 'category_id'], 
                 message=("Lesson is already taken.")
             )
         ]
+
+class NestedLessonSerializer(serializers.ModelSerializer):
+    profile_id = NestedProfileSerializer()
+    category_id = CategorySerializer()
+
+    class Meta:
+        model = Lesson
+        fields = "__all__"

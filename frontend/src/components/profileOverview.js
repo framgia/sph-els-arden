@@ -17,9 +17,6 @@ const ProfileOverview = () => {
   const avatar = domain.concat(state.avatar);
 
   const handleFollow = async () => {
-    const { data } = await profileService.getCurrentProfile();
-    const id = data.profile.id;
-
     try {
       if (state.follow) {
         await profileService.unfollow(state.id);

@@ -1,14 +1,17 @@
 from msilib.schema import AppId
+from signal import valid_signals
+from urllib import response
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.response import Response
 from django.contrib.auth.hashers import check_password
 
 from profiles.models import Profile, LearnedWord
 from users.models import User
-from .serializers import ProfileSerializer, AvatarSerializer, ProfileIDSSerializer, LearnedWordSerializer
-from users.api.serializers import UserProfileSerializer, UserProfileUpdateSerializer
+from follows.models import Follow
+from .serializers import NestedProfileSerializer, ProfileSerializer, AvatarSerializer, LearnedWordSerializer
+from users.api.serializers import UserProfileSerializer, UserProfileUpdateSerializer, UserSerializer
 from utils.jwt_payload import getJWTPayload
 
 class createProfileAPI(APIView):
@@ -73,7 +76,7 @@ class AvatarUploadAPI(APIView):
 class viewProfile(APIView):
     def get(self, request):
         payload = getJWTPayload(request)
-        profile = ProfileIDSSerializer(Profile.objects.get(user_id=payload['id']))
+        profile = NestedProfileSerializer(Profile.objects.get(user_id=payload['id']))
         user = UserProfileSerializer(User.objects.get(id=payload['id']))
 
         response_load = {
@@ -87,7 +90,6 @@ class viewOtherProfile(APIView):
     def get(self, request, pk):
         data = request.data
         try:
-            # profile = Profile.objects.get(pk=pk)
             profile = ProfileSerializer(Profile.objects.get(user_id=pk))
             user = UserProfileSerializer(User.objects.get(id=pk))
 
@@ -111,3 +113,26 @@ class LearnedWordsTable(ListCreateAPIView):
         return self.queryset.filter(
             user_id=self.kwargs['pk']
         )
+
+class ProfilePageData(APIView):
+    def get(self, request, pk):
+        response_load = {}
+        follow = {'follow': False}
+        if(pk==request.user.id): viewingOwn = {'viewingOwn': True}
+        else : viewingOwn = {'viewingOwn': False}
+        visitor = Profile.objects.get(user_id=request.user.id)
+        profile = ProfileSerializer(Profile.objects.get(user_id=pk))
+        user = UserProfileSerializer(User.objects.get(id=pk))
+        followers = Follow.objects.filter(following_id=profile.data['id']).values('follower_id')
+        for follower in followers:
+            if(follower['follower_id'], visitor.id):
+                follow = {'follow':True}
+                break
+        response_load['followers'] = followers.count()
+        response_load['following'] = Follow.objects.filter(follower_id=profile.data['id']).values('following_id').count()
+        response_load.update(profile.data)
+        response_load.update(user.data)
+        response_load.update(follow)
+        response_load.update(viewingOwn)
+        
+        return Response(response_load, status=status.HTTP_200_OK)

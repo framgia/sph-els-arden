@@ -40,3 +40,11 @@ export function unfollow(id) {
 export function follow(id) {
   return httpService.post(`${api}/follows/${id}/create`);
 }
+
+export function getOtherProfile(id) {
+  return httpService.get(`${api}/profiles/profile/${id}`);
+}
+
+export function getProfilePageData(id) {
+  return httpService.get(`${api}/profiles/data/${id}`);
+}
