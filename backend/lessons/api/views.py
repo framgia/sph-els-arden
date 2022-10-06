@@ -9,6 +9,7 @@ from activities.models import Activity
 from admins.models import Category, Question
 from profiles.models import Profile
 from lessons.models import Answer, Lesson
+from profiles.api.serializers import LearnedWordSerializer
 from .serializers import CreateLessonSerializer, AnswerSerializer, UpdateAnswerSerializer, NestedAnswerSerializer
 from admins.api.serializers import CategorySerializer, QuestionSerializer
 
@@ -78,6 +79,8 @@ class QuizAnswer(APIView):
         if newAnswer.is_valid():
             newAnswer.save()
             updateLessonProgress(request.data['lesson_id'])
+            if(correct):
+                addLearnedWord(request.user.id, question.word, answer)
             return Response(newAnswer.data, status=status.HTTP_201_CREATED)
         else:
             existingAnswer = Answer.objects.get(lesson_id=request.data['lesson_id'], question_id=pk)
@@ -89,6 +92,8 @@ class QuizAnswer(APIView):
             if updateAnswer.is_valid():
                 updateAnswer.save()
                 updateLessonProgress(request.data['lesson_id'])
+                if(correct):
+                    addLearnedWord(request.user.id, question.word, answer)
                 return Response(updateAnswer.validated_data, status=status.HTTP_200_OK)
         return Response({'error':'invalid data'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -113,3 +118,11 @@ def updateLessonProgress(id):
     lesson.progress = progress
     lesson.completed = True if progress==1.0 else False
     lesson.save()
+
+def addLearnedWord(id, word, answer):
+    try:
+        addWord = LearnedWordSerializer(data={'user_id': id,'word':word, 'answer':answer})
+        if addWord.is_valid():
+            addWord.save()
+    except:
+        return
