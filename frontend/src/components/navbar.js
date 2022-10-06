@@ -27,9 +27,11 @@ const NavBar = () => {
               >
                 Categories
               </Nav.Link>
+              <Nav.Link href={user.is_staff ? "/admin/home" : "/home"}>
+                Home
+              </Nav.Link>
             </React.Fragment>
           ) : null}
-          <Nav.Link href="/home">Home</Nav.Link>
           <Nav.Link href="/profile">Profile</Nav.Link>
           <Nav.Link onClick={handleLoginLogout} href={!user ? "/login" : null}>
             {user ? "Logout" : "Login"}

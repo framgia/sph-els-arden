@@ -13,13 +13,7 @@ const Dashboard = () => {
 
   return (
     <Container>
-      {user ? (
-        user.is_staff ? (
-          <h1>Admin Dashboard</h1>
-        ) : (
-          <h1>Dashboard</h1>
-        )
-      ) : null}
+      <h1>Dashboard</h1>
       <Row>
         <Col md={3}>
           <Row>

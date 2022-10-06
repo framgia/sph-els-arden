@@ -16,6 +16,7 @@ import UserList from "./pages/usersList";
 import Categories from "./pages/categories";
 import AdminQuestions from "./pages/adminQuestions";
 import LessonQuiz from "./pages/lesson";
+import AdminDashboard from "./pages/adminDashboard";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/edit" element={<EditProfile />} />
             <Route path="/profile/follows" element={<Follows />} />
+            <Route path="admin/home" element={<AdminDashboard />} />
             <Route path="/admin/categories" element={<AdminCategories />} />
             <Route path="/admin/category/:id/edit" element={<EditCategory />} />
             <Route path="/admin/category/add" element={<AddCategory />} />
