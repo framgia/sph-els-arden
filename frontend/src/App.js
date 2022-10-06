@@ -17,6 +17,7 @@ import Categories from "./pages/categories";
 import AdminQuestions from "./pages/adminQuestions";
 import LessonQuiz from "./pages/lesson";
 import AdminDashboard from "./pages/adminDashboard";
+import Result from "./pages/result";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="/users" element={<UserList />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/lesson/:id" element={<LessonQuiz />} />
+            <Route path="/lesson/:id/results" element={<Result />} />
             <Route
               path="/admin/category/:id/questions"
               element={<AdminQuestions />}
