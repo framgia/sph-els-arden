@@ -13,12 +13,12 @@ class GetAllActivitiesAPI(APIView):
         response_load = {}
         count =0
 
-        activities = Activity.objects.all().order_by('activity_date')
+        activities = Activity.objects.all().order_by('-activity_date')
         for activity in activities:
             serialized = ActivitySerializer(activity)
             response_load[count] = serialized.data
             count +=1
-        return Response(response_load, status=status.HTTP_400_BAD_REQUEST)
+        return Response(response_load, status=status.HTTP_200_OK)
 
 class GetActivitiesAPI(APIView):
     def get(self, request, pk):

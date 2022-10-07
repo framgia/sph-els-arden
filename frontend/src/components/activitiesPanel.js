@@ -6,16 +6,21 @@ import { UserContext } from "../utils/userContext";
 import Activity from "./activity";
 import * as activityService from "../services/activityService";
 
-const ActivitiesPanel = ({ otherUserID }) => {
+const ActivitiesPanel = ({ otherUserID, all }) => {
   const [activities, setActivities] = useState();
   const { user } = useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await activityService.getActivities(
-        otherUserID ? otherUserID : user.id
-      );
-      setActivities(data);
+      if (!all) {
+        const { data } = await activityService.getUser(
+          otherUserID ? otherUserID : user.id
+        );
+        setActivities(data);
+      } else {
+        const { data } = await activityService.getAllUsers();
+        setActivities(data);
+      }
     };
     fetchData();
   }, []);
