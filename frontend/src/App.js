@@ -18,6 +18,7 @@ import AdminQuestions from "./pages/adminQuestions";
 import LessonQuiz from "./pages/lesson";
 import AdminDashboard from "./pages/adminDashboard";
 import Result from "./pages/result";
+import { LessonContextProvider } from "./utils/lessonContext";
 
 function App() {
   return (
@@ -39,8 +40,15 @@ function App() {
             <Route path="/admin/category/add" element={<AddCategory />} />
             <Route path="/users" element={<UserList />} />
             <Route path="/categories" element={<Categories />} />
-            <Route path="/lesson/:id" element={<LessonQuiz />} />
             <Route path="/lesson/:id/results" element={<Result />} />
+            <Route
+              path="/lesson/:id"
+              element={
+                <LessonContextProvider>
+                  <LessonQuiz />
+                </LessonContextProvider>
+              }
+            />
             <Route
               path="/admin/category/:id/questions"
               element={<AdminQuestions />}

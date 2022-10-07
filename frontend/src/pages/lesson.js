@@ -1,22 +1,30 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
+import { useParams } from "react-router-dom";
 import QuizPanel from "../components/quizPanel";
+import { LessonContext } from "../utils/lessonContext";
 
 const LessonQuiz = () => {
-  const filler = {
-    word: "じゃね",
-    choice_0: "goodbye",
-    choice_1: "thank you",
-    choice_2: "maybe",
-    choice_3: "you",
-  };
-  return (
+  const { id } = useParams();
+  const { lesson, setLessonId } = useContext(LessonContext);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLessonId(id);
+  });
+
+  useEffect(() => {
+    if (lesson) setLoading(false);
+  }, [lesson]);
+  return !loading && !lesson.completed ? (
     <div>
-      <h1>"Category Title"</h1>
+      <h1 className="text-capitalize">{lesson.category.title}</h1>
       <Container>
-        <QuizPanel data={filler} />
+        <QuizPanel />
       </Container>
     </div>
+  ) : (
+    <h1>Lesson Completed</h1>
   );
 };
 
