@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
-import CategoryForm from "../components/categoryForm";
+import CategoryForm from "../../components/categoryForm";
 import { useNavigate, useParams } from "react-router-dom";
-import { editCategory, getCategory } from "../services/adminService";
+import { editCategory, getCategory } from "../../services/adminService";
 import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
 

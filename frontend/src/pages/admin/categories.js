@@ -5,10 +5,8 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
-import Pagination from "../components/pagination";
-import { UserContext } from "../utils/userContext";
-import * as adminService from "../services/adminService";
-import { Link, useNavigate } from "react-router-dom";
+import * as adminService from "../../services/adminService";
+import { useNavigate } from "react-router-dom";
 
 const AdminCategories = () => {
   const [categories, setCategories] = useState();
@@ -46,6 +44,14 @@ const AdminCategories = () => {
     navigate(`/admin/category/${id}/edit`);
   };
 
+  const handleCategoryClick = (category) => {
+    navigate(`/admin/category/${category.id}/questions`, { state: category });
+  };
+
+  const handleAddWord = (category) => {
+    navigate(`/admin/category/${category.id}/question/add`);
+  };
+
   return (
     <Container fluid>
       <Row>
@@ -71,15 +77,26 @@ const AdminCategories = () => {
               {categories
                 ? Object.keys(categories).map((key) => (
                     <tr key={categories[key].id}>
-                      <td className="align-middle text-capitalize">
+                      <td
+                        className="align-middle text-capitalize"
+                        onClick={() => handleCategoryClick(categories[key])}
+                      >
                         {categories[key].title}
                       </td>
-                      <td className="align-middle">
+                      <td
+                        className="align-middle"
+                        onClick={() => handleCategoryClick(categories[key])}
+                      >
                         {categories[key].description}
                       </td>
                       <td className="align-middle">
                         <div className="d-grid gap-2">
-                          <Button size="sm">Add word</Button>
+                          <Button
+                            size="sm"
+                            onClick={() => handleAddWord(categories[key])}
+                          >
+                            Add word
+                          </Button>
                           <Button
                             onClick={() => handleEdit(categories[key].id)}
                             size="sm"

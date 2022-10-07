@@ -6,10 +6,10 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import InputField from "../components/input";
-import { validate, validateField } from "../utils/validation";
-import * as profileService from "../services/profileService";
-import { getErrorMessage } from "../utils/validation";
+import InputField from "../../components/input";
+import { validate, validateField } from "../../utils/validation";
+import * as profileService from "../../services/profileService";
+import { getErrorMessage } from "../../utils/validation";
 
 const EditProfile = () => {
   const [state, setState] = useState();

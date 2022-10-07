@@ -5,11 +5,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useSearchParams } from "react-router-dom";
 
-import ProfileOverview from "../components/profileOverview";
-import FollowsPanel from "../components/followsPanel";
-import * as profileService from "../services/profileService";
-import * as userService from "../services/userService";
-import { setPage } from "../store/follow";
+import ProfileOverview from "../../components/profileOverview";
+import FollowsPanel from "../../components/followsPanel";
+import * as profileService from "../../services/profileService";
+import * as userService from "../../services/userService";
+import { setPage } from "../../store/follow";
 
 const Follows = () => {
   const params = new URLSearchParams(window.location.search);

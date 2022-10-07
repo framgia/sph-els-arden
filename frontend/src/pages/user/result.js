@@ -1,13 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { UserContext } from "../utils/userContext";
-import ResultEntry from "../components/resultEntry";
+import ResultEntry from "../../components/resultEntry";
 
 const Result = () => {
-  const { user } = useContext(UserContext);
-
   return (
     <Container>
       <Row>
