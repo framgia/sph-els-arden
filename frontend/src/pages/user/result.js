@@ -16,11 +16,8 @@ const Result = () => {
     getResult(id)
       .then(({ data }) => {
         setState(data);
-        setLoading(false);
       })
-      .catch((error) => {
-        setLoading(false);
-      });
+      .finally(() => setLoading(false));
   }, []);
 
   return !loading ? (
