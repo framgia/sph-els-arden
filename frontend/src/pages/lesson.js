@@ -1,16 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
-import { useParams } from "react-router-dom";
 import QuizPanel from "../components/quizPanel";
 import { LessonContext } from "../utils/lessonContext";
 
 const LessonQuiz = () => {
-  const { id } = useParams();
-  const { lesson, setLessonId } = useContext(LessonContext);
-
-  useEffect(() => {
-    setLessonId(id);
-  });
+  const { lesson } = useContext(LessonContext);
 
   return lesson && !lesson.completed ? (
     <div>
