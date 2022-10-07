@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import { useParams, useLocation } from "react-router-dom";
-import QuestionPanel from "../components/adminQuestionPanel";
-import { getQuestions } from "../services/adminService";
+import QuestionPanel from "../../components/questionPanel";
+import { getQuestions } from "../../services/adminService";
 
 const AdminQuestions = () => {
   const { id } = useParams();

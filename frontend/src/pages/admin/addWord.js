@@ -4,9 +4,9 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { useParams, useNavigate } from "react-router-dom";
-import { addWord } from "../services/adminService";
+import { addWord } from "../../services/adminService";
 
-import InputField from "../components/input";
+import InputField from "../../components/input";
 
 const AdminAddWord = () => {
   const { id } = useParams();

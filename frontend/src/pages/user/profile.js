@@ -5,11 +5,11 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import { setProfile } from "../store/profile";
-import ProfileOverview from "../components/profileOverview";
-import ActivitiesPanel from "../components/activitiesPanel";
-import { UserContext } from "../utils/userContext";
-import * as profileService from "../services/profileService";
+import { setProfile } from "../../store/profile";
+import ProfileOverview from "../../components/profileOverview";
+import ActivitiesPanel from "../../components/activitiesPanel";
+import { UserContext } from "../../utils/userContext";
+import * as profileService from "../../services/profileService";
 
 const Profile = () => {
   const { id } = useParams();

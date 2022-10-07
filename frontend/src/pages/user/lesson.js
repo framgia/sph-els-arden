@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
-import QuizPanel from "../components/quizPanel";
-import { LessonContext } from "../utils/lessonContext";
+import QuizPanel from "../../components/quizPanel";
+import { LessonContext } from "../../utils/lessonContext";
 
 const LessonQuiz = () => {
   const { lesson } = useContext(LessonContext);

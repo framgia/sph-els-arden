@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
-import * as adminService from "../services/adminService";
+import * as adminService from "../../services/adminService";
 import { useNavigate } from "react-router-dom";
 
 const AdminCategories = () => {
@@ -49,7 +49,7 @@ const AdminCategories = () => {
   };
 
   const handleAddWord = (category) => {
-    navigate(`/admin/category/${category.id}/addWord`);
+    navigate(`/admin/category/${category.id}/question/add`);
   };
 
   return (
