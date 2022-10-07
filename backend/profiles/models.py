@@ -1,4 +1,5 @@
 from email.policy import default
+from enum import unique
 from django.db import models
 from users.models import User
 
@@ -13,7 +14,8 @@ class Profile(models.Model):
 
 class LearnedWord(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    word = models.CharField(max_length=50, blank=False, null=False)
+    word = models.CharField(max_length=50, blank=False, null=False, unique=True)
+    answer = models.CharField(max_length=50, blank=False, null=False)
 
     def __str__(self):
         return self.word
