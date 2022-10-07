@@ -1,22 +1,20 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import QuizPanel from "../components/quizPanel";
+import { LessonContext } from "../utils/lessonContext";
 
 const LessonQuiz = () => {
-  const filler = {
-    word: "じゃね",
-    choice_0: "goodbye",
-    choice_1: "thank you",
-    choice_2: "maybe",
-    choice_3: "you",
-  };
-  return (
+  const { lesson } = useContext(LessonContext);
+
+  return lesson && !lesson.completed ? (
     <div>
-      <h1>"Category Title"</h1>
+      <h1 className="text-capitalize">{lesson.category.title}</h1>
       <Container>
-        <QuizPanel data={filler} />
+        <QuizPanel />
       </Container>
     </div>
+  ) : (
+    <h1>Lesson Completed</h1>
   );
 };
 

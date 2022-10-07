@@ -2,43 +2,52 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
-from django.db import IntegrityError
 from django.contrib.contenttypes.models import ContentType
-from activities.models import Activity
+from django.forms.models import model_to_dict
+import random
 
+from activities.models import Activity
 from admins.models import Category, Question
 from profiles.models import Profile
 from lessons.models import Answer, Lesson
 from profiles.api.serializers import LearnedWordSerializer
-from .serializers import CreateLessonSerializer, AnswerSerializer, UpdateAnswerSerializer, NestedAnswerSerializer
+from .serializers import CreateLessonSerializer, AnswerSerializer, LessonSerializer, UpdateAnswerSerializer, NestedAnswerSerializer
 from admins.api.serializers import CategorySerializer, QuestionSerializer
 
 class CreateLesson(APIView):
     def post(self, request, pk):
         try:
-            Category.objects.get(id=pk)
+            category =Category.objects.get(id=pk)
         except Category.DoesNotExist:
             return Response({'message': "This category does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
         profile = Profile.objects.get(user_id=request.user.id)
-        print(profile.id)
         load = {
             'profile_id' : profile.id,
             'category_id' : pk
         }
         serializer = CreateLessonSerializer(data=load)
         if serializer.is_valid():
+            response_load = organizeQuestion(category)
             try:
                 lessonObj = serializer.save()
+                response_load['id'] = lessonObj.id
                 activity = Activity(
                     content_type = ContentType.objects.get_for_model(lessonObj), 
                     object_id = lessonObj.id
                 )
                 activity.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            except IntegrityError:
+                return Response(response_load, status=status.HTTP_201_CREATED)
+            except:
                 Response({'error':'duplicate entry'},status=status.HTTP_400_BAD_REQUEST)
-
+        existingLesson = model_to_dict(Lesson.objects.get(profile_id=profile.id, category_id=pk))
+        serializedExisting =LessonSerializer(data = existingLesson)
+        if serializedExisting.is_valid():
+            response_load = organizeQuestion(category)
+            response_load['id'] = existingLesson['id']
+            response_load['progress'] = existingLesson['completed']
+            response_load['completed'] = existingLesson['completed']
+            return Response(response_load, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CategoriesView(ListAPIView):
@@ -126,3 +135,24 @@ def addLearnedWord(id, word, answer):
             addWord.save()
     except:
         return
+def organizeQuestion(category):
+    response_load = {}
+    questions_load = []
+    questions = Question.objects.filter(category_id=category.id)
+    for question in questions:
+        serializedQuestion= QuestionSerializer(question).data
+        choices = [
+            serializedQuestion['choice_1'],
+            serializedQuestion['choice_2'],
+            serializedQuestion['choice_3'],
+            serializedQuestion['correct_answer']
+        ]
+        random.shuffle(choices)
+        serializedQuestion.pop('choice_1')
+        serializedQuestion.pop('choice_2')
+        serializedQuestion.pop('choice_3')
+        serializedQuestion['choices'] = choices
+        questions_load.append(serializedQuestion)
+    response_load['questions'] = (questions_load)
+    response_load['category'] = CategorySerializer(category).data
+    return response_load
