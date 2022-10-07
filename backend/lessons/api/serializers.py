@@ -54,7 +54,6 @@ class AnswerSerializer(serializers.ModelSerializer):
 class NestedAnswerSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     question_id = QuestionSerializer()
-    lesson_id = LessonSerializer()
 
     class Meta:
         model = Answer

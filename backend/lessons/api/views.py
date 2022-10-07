@@ -1,3 +1,4 @@
+from urllib import response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
@@ -11,7 +12,7 @@ from admins.models import Category, Question
 from profiles.models import Profile
 from lessons.models import Answer, Lesson
 from profiles.api.serializers import LearnedWordSerializer
-from .serializers import CreateLessonSerializer, AnswerSerializer, LessonSerializer, UpdateAnswerSerializer, NestedAnswerSerializer
+from .serializers import CreateLessonSerializer, AnswerSerializer, LessonSerializer, NestedLessonSerializer, UpdateAnswerSerializer, NestedAnswerSerializer
 from admins.api.serializers import CategorySerializer, QuestionSerializer
 
 class CreateLesson(APIView):
@@ -108,12 +109,16 @@ class QuizAnswer(APIView):
 
     def get(self, request, pk):
         # pk is lesson id
-        response_load = []
+        response_load = {}
+        answers_load = []
         answers = Answer.objects.filter(lesson_id=pk)
+        response_load['lesson'] = NestedLessonSerializer(Lesson.objects.get(id=pk)).data
 
         for answer in answers:
             serialized = NestedAnswerSerializer(answer)
-            response_load.append(serialized.data)
+            answers_load.append(serialized.data)
+
+        response_load['answers'] = answers_load
         return Response(response_load, status=status.HTTP_200_OK)
 
 
