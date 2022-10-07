@@ -51,6 +51,14 @@ function App() {
             <Route path="/admin/category/:id/edit" element={<EditCategory />} />
             <Route path="/admin/category/add" element={<AddCategory />} />
             <Route
+              path="/lesson/:id"
+              element={
+                <LessonContextProvider>
+                  <LessonQuiz />
+                </LessonContextProvider>
+              }
+            />
+            <Route
               path="/admin/category/:id/questions"
               element={<AdminQuestions />}
             />
