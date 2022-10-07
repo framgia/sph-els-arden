@@ -19,6 +19,7 @@ import LessonQuiz from "./pages/lesson";
 import AdminDashboard from "./pages/adminDashboard";
 import Result from "./pages/result";
 import { LessonContextProvider } from "./utils/lessonContext";
+import AdminAddWord from "./pages/adminAddWord";
 
 function App() {
   return (
@@ -52,6 +53,10 @@ function App() {
             <Route
               path="/admin/category/:id/questions"
               element={<AdminQuestions />}
+            />
+            <Route
+              path="/admin/category/:id/addWord"
+              element={<AdminAddWord />}
             />
           </Routes>
         </Container>

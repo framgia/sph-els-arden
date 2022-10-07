@@ -1,25 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
+import { useParams, useLocation } from "react-router-dom";
 import QuestionPanel from "../components/adminQuestionPanel";
+import { getQuestions } from "../services/adminService";
 
 const AdminQuestions = () => {
-  const filler = {
-    word: "じゃね",
-    correct_answer: "goodbye",
-    choice_1: "thank you",
-    choice_2: "maybe",
-    choice_3: "you",
+  const { id } = useParams();
+  const location = useLocation();
+  const [loading, setLoading] = useState(true);
+  const [questions, setQuestions] = useState();
+
+  const handleChange = (index, newQuestion) => {
+    setQuestions({ ...questions, [index]: newQuestion });
   };
-  return (
+
+  const handleDelete = (index) => {
+    const toDelete = { ...questions };
+    delete toDelete[index];
+    setQuestions(toDelete);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await getQuestions(id);
+      setQuestions(data);
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
+  return !loading ? (
     <div>
-      <h1>"Category Title" Questions</h1>
+      <h1 className="text-capitalize">{location.state.title} Questions</h1>
       <Container>
-        <QuestionPanel data={filler} />
-        <QuestionPanel data={filler} />
-        <QuestionPanel data={filler} />
+        {Object.keys(questions).map((key) => (
+          <React.Fragment key={key}>
+            <QuestionPanel
+              question={questions[key]}
+              handleChange={handleChange}
+              handleDelete={handleDelete}
+              index={key}
+            />
+          </React.Fragment>
+        ))}
       </Container>
     </div>
-  );
+  ) : null;
 };
 
 export default AdminQuestions;
