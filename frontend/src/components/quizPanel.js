@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -15,9 +15,8 @@ const QuizPanel = () => {
   const navigate = useNavigate();
 
   const handleAnswerClick = async (e) => {
-    const answer = e.target.value;
     const load = {
-      answer: answer,
+      answer: e.target.value,
       lesson_id: lesson.id,
     };
     await submitAnswer(id, load);
@@ -39,34 +38,17 @@ const QuizPanel = () => {
           </div>
           <Row>
             <Col className="d-grid gap-5 pt-3 pb-4">
-              <Button
-                value={choices[0]}
-                onClick={handleAnswerClick}
-                variant="outline-primary"
-              >
-                {choices[0]}
-              </Button>
-              <Button
-                value={choices[1]}
-                onClick={handleAnswerClick}
-                variant="outline-primary"
-              >
-                {choices[1]}
-              </Button>
-              <Button
-                value={choices[2]}
-                onClick={handleAnswerClick}
-                variant="outline-primary"
-              >
-                {choices[2]}
-              </Button>
-              <Button
-                value={choices[3]}
-                onClick={handleAnswerClick}
-                variant="outline-primary"
-              >
-                {choices[3]}
-              </Button>
+              {Object.keys(choices).map((key) => (
+                <React.Fragment key={key}>
+                  <Button
+                    value={choices[key]}
+                    onClick={handleAnswerClick}
+                    variant="outline-primary"
+                  >
+                    {choices[key]}
+                  </Button>
+                </React.Fragment>
+              ))}
             </Col>
           </Row>
         </Col>

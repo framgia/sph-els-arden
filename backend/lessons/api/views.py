@@ -1,10 +1,7 @@
-from secrets import choice
-from urllib import response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
-from django.db import IntegrityError
 from django.contrib.contenttypes.models import ContentType
 from django.forms.models import model_to_dict
 import random

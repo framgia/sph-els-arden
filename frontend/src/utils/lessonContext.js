@@ -11,18 +11,14 @@ const LessonContextProvider = ({ children }) => {
   const [lessonId, setLessonId] = useState();
 
   useEffect(() => {
-    const fetchData = () => {
-      startLesson(lessonId)
-        .then(({ data }) => {
-          setLesson(data);
-          setLoading(false);
-        })
-        .catch(() => {
-          setLoading(false);
-        })
-        .finally(() => {});
-    };
-    fetchData();
+    startLesson(lessonId)
+      .then(({ data }) => {
+        setLesson(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   }, [lessonId]);
 
   return (

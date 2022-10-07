@@ -7,16 +7,12 @@ import { LessonContext } from "../utils/lessonContext";
 const LessonQuiz = () => {
   const { id } = useParams();
   const { lesson, setLessonId } = useContext(LessonContext);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLessonId(id);
   });
 
-  useEffect(() => {
-    if (lesson) setLoading(false);
-  }, [lesson]);
-  return !loading && !lesson.completed ? (
+  return lesson && !lesson.completed ? (
     <div>
       <h1 className="text-capitalize">{lesson.category.title}</h1>
       <Container>
