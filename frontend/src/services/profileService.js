@@ -48,3 +48,7 @@ export function getOtherProfile(id) {
 export function getProfilePageData(id) {
   return httpService.get(`${api}/profiles/data/${id}`);
 }
+
+export function getLearnedWords(id) {
+  return httpService.get(`${api}/profiles/${id}/words`);
+}

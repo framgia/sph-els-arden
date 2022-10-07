@@ -2,7 +2,7 @@ import React from "react";
 import Container from "react-bootstrap/Container";
 import WordEntry from "./word";
 
-const WordsPanel = () => {
+const WordsPanel = ({ data }) => {
   return (
     <Container className="pt-4 bg-light">
       <Container
@@ -24,16 +24,11 @@ const WordsPanel = () => {
         <hr />
       </Container>
       <Container style={{ columns: 2, columnRule: "4px outset gray" }}>
-        <WordEntry data={{ word: "word", answer: "answer" }} />
-        <WordEntry data={{ word: "word", answer: "answer" }} />
-        <WordEntry data={{ word: "word", answer: "answer" }} />
-        <WordEntry data={{ word: "word", answer: "answer" }} />
-        <WordEntry data={{ word: "word", answer: "answer" }} />
-        <WordEntry data={{ word: "word", answer: "answer" }} />
-        <WordEntry data={{ word: "word", answer: "answer" }} />
-        <WordEntry data={{ word: "word", answer: "answer" }} />
-        <WordEntry data={{ word: "word", answer: "answer" }} />
-        <WordEntry data={{ word: "word", answer: "answer" }} />
+        {Object.keys(data).map((key) => (
+          <React.Fragment key={key}>
+            <WordEntry data={data[key]} />
+          </React.Fragment>
+        ))}
       </Container>
     </Container>
   );
