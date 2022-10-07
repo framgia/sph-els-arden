@@ -13,12 +13,12 @@ const ActivitiesPanel = ({ otherUserID, all }) => {
   useEffect(() => {
     const fetchData = async () => {
       if (!all) {
-        const { data } = await activityService.getActivities(
+        const { data } = await activityService.getUser(
           otherUserID ? otherUserID : user.id
         );
         setActivities(data);
       } else {
-        const { data } = await activityService.getAllActivities();
+        const { data } = await activityService.getAllUsers();
         setActivities(data);
       }
     };
