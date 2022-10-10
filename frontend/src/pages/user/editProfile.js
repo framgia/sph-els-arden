@@ -85,7 +85,6 @@ const EditProfile = () => {
     const avatar = event.target.files[0];
     formData.append("avatar", avatar);
     avatarFile = formData;
-    console.log(avatar);
   };
 
   return (

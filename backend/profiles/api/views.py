@@ -12,18 +12,8 @@ from profiles.models import Profile, LearnedWord
 from users.models import User
 from follows.models import Follow
 from .serializers import NestedProfileSerializer, ProfileSerializer, AvatarSerializer, LearnedWordSerializer
-from users.api.serializers import UserProfileSerializer, UserProfileUpdateSerializer, UserSerializer
+from users.api.serializers import UserProfileSerializer, UserProfileUpdateSerializer
 from utils.jwt_payload import getJWTPayload
-
-class createProfileAPI(APIView):
-    permission_classes = [AllowAny]
-    def post(self, request):
-        serializer = ProfileSerializer(data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class updateProfileAPI(APIView):
     def patch(self, request, pk):

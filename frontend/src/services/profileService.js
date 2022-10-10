@@ -18,7 +18,6 @@ export function getCurrentProfile() {
 }
 
 export function uploadAvatar(user, formData) {
-  console.log(formData);
   return httpService.post(`${api}/profiles/uploadAvatar/${user.id}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",

@@ -31,7 +31,6 @@ class CreateQuestionAPI(APIView):
             try:
                 serializer.save()
                 category = Category.objects.get(id=request.data["category_id"])
-                print(category)
                 category.total_questions += 1
                 category.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -110,7 +109,6 @@ class ViewUsers(APIView):
             entry= {}
             user = User.objects.get(id=profile['user_id_id'])
             userSerialized = UserSerializer(user)
-            print(userSerialized.data)
             entry['profile'] = profile
             entry['user'] = userSerialized.data
             response_load[count] = entry

@@ -29,7 +29,6 @@ const Register = () => {
     if (Object.keys(errors).length === 0) {
       try {
         const { data } = await userService.register(registrant);
-        userService.createProfile({ user_id: data.id });
         const payload = { ...registrant, success: true };
         dispatch(register(payload));
         navigate("/login");

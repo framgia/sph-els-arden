@@ -5,7 +5,6 @@ import Col from "react-bootstrap/Col";
 import "../asset/style.css";
 
 const WordEntry = ({ data }) => {
-  console.log(data);
   return (
     <Row className="pt-2 bg-light rounded d-flex justify-content-around text-center">
       <Col>
