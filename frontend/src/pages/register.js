@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
@@ -16,6 +16,7 @@ import * as userService from "../services/userService";
 const Register = () => {
   const registrant = useSelector((state) => state.registrant.value);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,9 +28,11 @@ const Register = () => {
     // if there are no errors, try register through api
     if (Object.keys(errors).length === 0) {
       try {
-        await userService.register(registrant);
+        const { data } = await userService.register(registrant);
+        userService.createProfile({ user_id: data.id });
         const payload = { ...registrant, success: true };
         dispatch(register(payload));
+        navigate("/login");
       } catch (exception) {
         if (exception.response && exception.response.status === 400) {
           // if failed, update state and show error

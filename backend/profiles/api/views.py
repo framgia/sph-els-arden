@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.response import Response
 from django.contrib.auth.hashers import check_password
+from rest_framework.permissions import AllowAny
 
 from profiles.models import Profile, LearnedWord
 from users.models import User
@@ -15,6 +16,7 @@ from users.api.serializers import UserProfileSerializer, UserProfileUpdateSerial
 from utils.jwt_payload import getJWTPayload
 
 class createProfileAPI(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
         serializer = ProfileSerializer(data=request.data)
 
@@ -33,12 +35,11 @@ class updateProfileAPI(APIView):
             return Response({'message': "incomplete data"}, status=status.HTTP_400_BAD_REQUEST)
 
         data = request.data
-        profileSerializer = ProfileSerializer(profile, data=data)
         try:
-            user_data = data['user']
-            user_id = data['user_id']
-            user = User.objects.get(pk=user_id)
-            userProfileSerializer = UserProfileUpdateSerializer(user, data=user_data)
+            user = User.objects.get(id=request.user.id)
+            userProfileSerializer = UserProfileUpdateSerializer(user, data=data['user'])
+            data['user_id']=request.user.id
+            profileSerializer = ProfileSerializer(profile, data=data)
         except User.DoesNotExist:
             return Response({'message': "this user does not exist"}, status=status.HTTP_400_BAD_REQUEST)
         except:
@@ -58,7 +59,6 @@ class updateProfileAPI(APIView):
 class AvatarUploadAPI(APIView):
     def post(self, request, pk):
         data = request.data
-        print(data)
         try:
             profile = Profile.objects.get(pk=pk)
         except Profile.DoesNotExist:

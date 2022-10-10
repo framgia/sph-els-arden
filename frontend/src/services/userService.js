@@ -29,3 +29,7 @@ export function logout() {
 export function allUsers() {
   return httpService.get(`${api}/users`);
 }
+
+export function createProfile(user) {
+  return httpService.post(`${api}/profiles/createProfile`, user);
+}
