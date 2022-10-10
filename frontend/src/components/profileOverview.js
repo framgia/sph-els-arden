@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/esm/Container";
@@ -15,6 +16,7 @@ const ProfileOverview = () => {
   const pageState = useSelector((state) => state.followPage.value);
   const dispatch = useDispatch();
   const avatar = domain.concat(state.avatar);
+  const navigate = useNavigate();
 
   const handleFollow = async () => {
     try {
@@ -44,7 +46,12 @@ const ProfileOverview = () => {
             {state.first_name} {state.last_name}
           </Card.Title>
           <hr />
-          <Row className="justify-content-center">
+          <Row
+            className="justify-content-center"
+            onClick={
+              state.viewingOwn ? () => navigate("/profile/follows") : null
+            }
+          >
             <Col>
               <p>{state.follower}</p>
               <p>Follower</p>

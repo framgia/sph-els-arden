@@ -22,6 +22,7 @@ export function uploadAvatar(user, formData) {
     headers: {
       "Content-Type": "multipart/form-data",
     },
+    data: formData,
   });
 }
 
