@@ -28,13 +28,15 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    getCurrentProfile().then(({ data }) => {
-      setProfile(data);
-    });
+    if (user) {
+      getCurrentProfile().then(({ data }) => {
+        setProfile(data);
+      });
 
-    getLearnedWords(user.id).then(({ data }) => {
-      setLearnedWords(data);
-    });
+      getLearnedWords(user.id).then(({ data }) => {
+        setLearnedWords(data);
+      });
+    }
   }, []);
 
   useEffect(() => {

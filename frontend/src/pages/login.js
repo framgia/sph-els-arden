@@ -34,7 +34,7 @@ const Login = () => {
         dispatch(login(payload));
         const { data } = await userService.loggedInUser();
         logIn(data);
-        navigate("/home");
+        data.is_staff ? navigate("/admin/categories") : navigate("/home");
       } catch (exception) {
         if (exception.response) {
           // if failed, update state and show error

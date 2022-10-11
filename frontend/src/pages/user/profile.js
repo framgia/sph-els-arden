@@ -43,7 +43,9 @@ const Profile = () => {
           </Row>
           <Row>
             <div md="auto" className="d-grid gap-2">
-              <Button onClick={() => navigate("/profile/edit")}>Edit</Button>
+              {profileState.viewingOwn ? (
+                <Button onClick={() => navigate("/profile/edit")}>Edit</Button>
+              ) : null}
             </div>
           </Row>
         </Col>
