@@ -42,9 +42,19 @@ const Profile = () => {
             <ProfileOverview />
           </Row>
           <Row>
-            <div md="auto" className="d-grid gap-2">
+            <div md="auto" className="d-grid gap-2 mt-3">
               {profileState.viewingOwn ? (
-                <Button onClick={() => navigate("/profile/edit")}>Edit</Button>
+                <React.Fragment>
+                  <Button
+                    variant="success"
+                    onClick={() => navigate("/profile/follows")}
+                  >
+                    View Follows
+                  </Button>
+                  <Button onClick={() => navigate("/profile/edit")}>
+                    Edit Profile
+                  </Button>
+                </React.Fragment>
               ) : null}
             </div>
           </Row>

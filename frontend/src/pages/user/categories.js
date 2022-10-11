@@ -39,16 +39,18 @@ const Categories = () => {
       <h1>Categories</h1>
       <Row xs={1} md={4} className="g-4">
         {categories
-          ? Object.keys(categories).map((key) => (
-              <CardGroup key={key}>
-                <CategoryCard
-                  data={categories[key]}
-                  onStart={handleStart}
-                  completed={checkCompletion(categories[key].id)}
-                  height={200}
-                />
-              </CardGroup>
-            ))
+          ? Object.keys(categories).map((key) =>
+              categories[key].total_questions > 0 ? (
+                <CardGroup key={key}>
+                  <CategoryCard
+                    data={categories[key]}
+                    onStart={handleStart}
+                    completed={checkCompletion(categories[key].id)}
+                    height={200}
+                  />
+                </CardGroup>
+              ) : null
+            )
           : null}
       </Row>
     </Container>

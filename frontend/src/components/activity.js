@@ -17,10 +17,10 @@ const Activity = ({ activity }) => {
   if (content_type === FOLLOW) {
     const { follower_id, following_id } = content_object;
     message = `${follower_id.user_id.first_name} followed ${following_id.user_id.first_name}`;
-    avatar = domain.concat(follower_id.avatar);
+    avatar = follower_id.avatar && domain.concat(follower_id.avatar);
   } else if (content_type === LESSON) {
     const { completed, profile_id, category_id } = content_object;
-    avatar = domain.concat(profile_id.avatar);
+    avatar = profile_id.avatar && domain.concat(profile_id.avatar);
     message = `${profile_id.user_id.first_name} ${
       completed ? "finished" : "started"
     } lesson in ${category_id.title}`;

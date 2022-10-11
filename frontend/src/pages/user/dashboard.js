@@ -53,7 +53,10 @@ const Dashboard = () => {
           <Row>
             <Col md="auto">
               <Image
-                src={domain + profile.profile.avatar || avatarPlaceholder}
+                src={
+                  (profile.profile.avatar && domain + profile.profile.avatar) ||
+                  avatarPlaceholder
+                }
                 style={{ width: "6rem" }}
               />
             </Col>
