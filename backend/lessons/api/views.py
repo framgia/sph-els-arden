@@ -1,3 +1,4 @@
+import profile
 from urllib import response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -58,6 +59,11 @@ class CategoriesView(ListAPIView):
 class LessonsView(ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(
+            profile_id=self.kwargs['pk']
+        )
 
 class QuestionsTable(ListAPIView):
     queryset = Question.objects.all()

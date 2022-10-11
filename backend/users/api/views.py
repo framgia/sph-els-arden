@@ -1,4 +1,5 @@
 from email import message
+from urllib import response
 from rest_framework import exceptions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -81,20 +82,15 @@ class LogoutAPI(APIView):
 # get info of logged in user
 class UserAPI(APIView):
     def get(self, request):
-        token = request.COOKIES.get('jwt')
-
-        if not token:
-            raise AuthenticationFailed("Unauthenticated!")
-
-        try:
-            payload = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed("Session expired!")
+        response_load={}
         
-        user = User.objects.get(id=payload['id'])
+        user = User.objects.get(id=request.user.id)
         serializer = UserSerializer(user)
+        response_load=serializer.data
+        profile = Profile.objects.get(user_id=request.user.id)
+        response_load['profile_id'] = Profile.objects.get(user_id=request.user.id).id
 
-        return Response(serializer.data)
+        return Response(response_load)
 
 class ViewUsers(APIView):
     def get(self, request):

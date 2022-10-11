@@ -67,9 +67,9 @@ const ProfileOverview = () => {
             </Button>
           ) : null}
           <Card.Body>
-            <Card.Link href="#">
+            <Card.Text href="#">
               Learned {state.total_words_learned} words
-            </Card.Link>
+            </Card.Text>
           </Card.Body>
         </Card.Body>
       </Card>

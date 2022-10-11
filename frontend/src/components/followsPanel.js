@@ -68,13 +68,17 @@ const FollowsPanel = (props) => {
           </Nav>
         </Card.Header>
         <Card.Body>
-          {pageState[currentTab]
-            ? Object.keys(pageState[currentTab]).map((entry) => (
-                <div key={entry} onClick={() => overview(entry)}>
-                  <FollowEntry entry={entry} />
-                </div>
-              ))
-            : null}
+          {Object.keys(pageState[currentTab]).length !== 0 ? (
+            Object.keys(pageState[currentTab]).map((entry) => (
+              <div key={entry} onClick={() => overview(entry)}>
+                <FollowEntry entry={entry} />
+              </div>
+            ))
+          ) : (
+            <p className="fs-5 d-flex justify-content-center">
+              No {currentTab}
+            </p>
+          )}
         </Card.Body>
       </Card>
     </Container>

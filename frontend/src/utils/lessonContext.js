@@ -1,11 +1,13 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 
 import { startLesson, getLessons } from "../services/lessonService";
+import { UserContext } from "./userContext";
 
 const LessonContext = createContext(null);
 
 const LessonContextProvider = ({ children }) => {
+  const { user } = useContext(UserContext);
   const [lesson, setLesson] = useState(null);
   const [allLessons, setAllLessons] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -23,7 +25,7 @@ const LessonContextProvider = ({ children }) => {
   }, [id]);
 
   useEffect(() => {
-    getLessons().then(({ data }) => {
+    getLessons(user.profile_id).then(({ data }) => {
       setAllLessons(data);
     });
   }, []);

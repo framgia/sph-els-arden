@@ -17,6 +17,6 @@ export function getResult(id) {
   return httpService.get(`${api}/lessons/${id}/answered`);
 }
 
-export function getLessons() {
-  return httpService.get(`${api}/lessons`);
+export function getLessons(id) {
+  return httpService.get(`${api}/lessons/${id}/taken`);
 }
