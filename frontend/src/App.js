@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import { UserContextProvider } from "./utils/userContext";
 import { LessonContextProvider } from "./utils/lessonContext";
 import Container from "react-bootstrap/Container";
@@ -66,6 +66,7 @@ function App() {
               path="/admin/category/:id/question/add"
               element={<AdminAddWord />}
             />
+            <Route path="*" element={<Navigate to="/home" />} />
           </Routes>
         </Container>
       </UserContextProvider>

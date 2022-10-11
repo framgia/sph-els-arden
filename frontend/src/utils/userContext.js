@@ -3,7 +3,12 @@ import { loggedInUser } from "../services/userService";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { logout } from "../services/userService";
-import { guestRoutes, authenticatedRoutes } from "../constants/routes";
+import {
+  guestRoutes,
+  authenticatedRoutes,
+  normalUserRoutes,
+} from "../constants/routes";
+import RouteMatching from "./routeMatching";
 
 const UserContext = createContext(null);
 
@@ -40,9 +45,21 @@ const UserContextProvider = ({ children }) => {
   useEffect(() => {
     if (!loading) {
       if (user) {
-        guestRoutes.includes(location.pathname) && navigate("home");
+        if (RouteMatching(guestRoutes, location.pathname)) {
+          user.is_staff ? navigate("/admin/home") : navigate("/home");
+        }
+
+        if (RouteMatching(["/admin"], location.pathname) && !user.is_staff) {
+          navigate("/home");
+        } else if (
+          RouteMatching(normalUserRoutes, location.pathname) &&
+          user.is_staff
+        ) {
+          navigate("/admin/categories");
+        }
       } else {
-        authenticatedRoutes.includes(location.pathname) && navigate("login");
+        RouteMatching(authenticatedRoutes, location.pathname) &&
+          navigate("login");
       }
     }
   }, [location.pathname, loading, user]);
