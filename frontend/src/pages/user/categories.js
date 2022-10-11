@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import CardGroup from "react-bootstrap/CardGroup";
 import CategoryCard from "../../components/categoryCard";
 import * as lessonService from "../../services/lessonService";
+import { LessonContext } from "../../utils/lessonContext";
 
 const Categories = () => {
   const [categories, setCategories] = useState();
+  const { allLessons } = useContext(LessonContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,6 +24,16 @@ const Categories = () => {
     navigate(`/lesson/${id}`);
   };
 
+  const checkCompletion = (id) => {
+    let completed = false;
+    allLessons.forEach((lesson) => {
+      if (lesson.category_id === id && lesson.completed) {
+        completed = true;
+      }
+    });
+    return completed;
+  };
+
   return (
     <Container>
       <h1>Categories</h1>
@@ -29,7 +41,12 @@ const Categories = () => {
         {categories
           ? Object.keys(categories).map((key) => (
               <CardGroup key={key}>
-                <CategoryCard data={categories[key]} onStart={handleStart} />
+                <CategoryCard
+                  data={categories[key]}
+                  onStart={handleStart}
+                  completed={checkCompletion(categories[key].id)}
+                  height={200}
+                />
               </CardGroup>
             ))
           : null}

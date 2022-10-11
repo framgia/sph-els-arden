@@ -55,6 +55,10 @@ class CategoriesView(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+class LessonsView(ListAPIView):
+    queryset = Lesson.objects.all()
+    serializer_class = LessonSerializer
+
 class QuestionsTable(ListAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
