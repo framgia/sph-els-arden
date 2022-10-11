@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import CreateLesson, CategoriesView, QuestionsTable, QuizAnswer
+from .views import CreateLesson, CategoriesView, QuestionsTable, QuizAnswer, LessonsView
 
 urlpatterns = [
+    path('/', LessonsView.as_view()),
     path('/<int:pk>', CreateLesson.as_view()),
     path('/categories', CategoriesView.as_view()),
     path('/<int:pk>/questions', QuestionsTable.as_view()),

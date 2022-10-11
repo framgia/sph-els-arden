@@ -16,3 +16,7 @@ export function submitAnswer(id, load) {
 export function getResult(id) {
   return httpService.get(`${api}/lessons/${id}/answered`);
 }
+
+export function getLessons() {
+  return httpService.get(`${api}/lessons`);
+}

@@ -35,7 +35,14 @@ function App() {
             <Route path="/profile/edit" element={<EditProfile />} />
             <Route path="/profile/follows" element={<Follows />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/categories" element={<Categories />} />
+            <Route
+              path="/categories"
+              element={
+                <LessonContextProvider>
+                  <Categories />
+                </LessonContextProvider>
+              }
+            />
             <Route path="/lesson/:id/results" element={<Result />} />
             <Route
               path="/lesson/:id"
