@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { ArrowRightCircle } from "react-bootstrap-icons";
 
 import ResultEntry from "../../components/resultEntry";
 import { getResult } from "../../services/lessonService";
@@ -11,6 +12,7 @@ const Result = () => {
   const { id } = useParams();
   const [state, setState] = useState();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getResult(id)
@@ -52,6 +54,17 @@ const Result = () => {
                   </React.Fragment>
                 ))
               : null}
+            <div className="ms-4 mt-4 d-flex align-items-center justify-content-end">
+              <div
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate("/categories")}
+              >
+                <span className="me-2 fs-4 align-middle">
+                  Go Back to Categories
+                </span>
+                <ArrowRightCircle size={30} />
+              </div>
+            </div>
           </React.Fragment>
         </Col>
       </Row>
