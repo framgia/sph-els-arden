@@ -1,5 +1,6 @@
 from dataclasses import fields
 from rest_framework import serializers
+from  rest_framework.validators import UniqueTogetherValidator
 
 from profiles.models import Profile, LearnedWord
 from users.api.serializers import UserProfileSerializer
@@ -28,6 +29,13 @@ class LearnedWordSerializer(serializers.ModelSerializer):
     class Meta:
         model = LearnedWord
         fields = "__all__"
+        validators = [
+            UniqueTogetherValidator(
+                queryset=LearnedWord.objects.all(),
+                fields=['user_id', 'word'], 
+                message=("Word is already learned.")
+            )
+        ]
 
 class NestedProfileSerializer(serializers.ModelSerializer):
     user_id = UserProfileSerializer()
