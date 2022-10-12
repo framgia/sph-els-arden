@@ -14,6 +14,7 @@ import { getErrorMessage } from "../../utils/validation";
 const EditProfile = () => {
   const [state, setState] = useState();
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   let avatarFile = {};
@@ -29,6 +30,7 @@ const EditProfile = () => {
       };
 
       setState(payload);
+      setLoading(false);
     };
     fetchProfile();
   }, []);
@@ -39,7 +41,12 @@ const EditProfile = () => {
 
     if (Object.keys(errors).length === 0) {
       try {
-        const profileResponse = await profileService.update(state);
+        let load = state;
+        if (state.password === "" && state.password2 === "") {
+          const { password, password2, ...excluded } = state;
+          load = excluded;
+        }
+        const profileResponse = await profileService.update(load);
 
         const avatarResponse = await profileService.uploadAvatar(
           state,
@@ -87,7 +94,7 @@ const EditProfile = () => {
     avatarFile = formData;
   };
 
-  return (
+  return !loading ? (
     <Container>
       <Row>
         <Col md={{ span: 6, offset: 3 }}>
@@ -99,6 +106,7 @@ const EditProfile = () => {
                   name="first_name"
                   label="First Name"
                   type="text"
+                  defaultValue={state.first_name}
                   onChange={handleChange}
                   error={errors.first_name}
                 />
@@ -108,6 +116,7 @@ const EditProfile = () => {
                   name="last_name"
                   label="Last Name"
                   type="text"
+                  defaultValue={state.last_name}
                   onChange={handleChange}
                   error={errors.last_name}
                 />
@@ -118,6 +127,7 @@ const EditProfile = () => {
                 name="email"
                 label="Email"
                 type="text"
+                defaultValue={state.email}
                 onChange={handleChange}
                 error={errors.email}
               />
@@ -143,13 +153,13 @@ const EditProfile = () => {
               </Form.Group>
             </Row>
             <div className="d-grid gap-2">
-              <Button onClick={handleSubmit}>Save</Button>
+              <Button onClick={(e) => handleSubmit(e)}>Save</Button>
             </div>
           </Form>
         </Col>
       </Row>
     </Container>
-  );
+  ) : null;
 };
 
 export default EditProfile;

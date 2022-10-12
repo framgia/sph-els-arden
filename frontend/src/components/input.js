@@ -2,7 +2,7 @@ import React, { forwardRef } from "react";
 import Form from "react-bootstrap/Form";
 
 const InputField = forwardRef(
-  ({ name, label, value, onChange, type, error }, ref) => {
+  ({ name, label, value, onChange, type, error, defaultValue }, ref) => {
     return (
       <Form.Group className="mb-3" controlId={name}>
         <Form.Label>{label}</Form.Label>
@@ -12,6 +12,7 @@ const InputField = forwardRef(
           placeholder={label}
           value={value}
           onChange={onChange}
+          defaultValue={defaultValue || null}
         />
 
         {/* conditional rendering */}
