@@ -16,7 +16,7 @@ const InputField = forwardRef(
 
         {/* conditional rendering */}
         {error && (
-          <Form.Text id={name} muted>
+          <Form.Text className="text-danger" id={name}>
             {error}
           </Form.Text>
         )}

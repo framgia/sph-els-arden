@@ -87,8 +87,8 @@ class UserAPI(APIView):
         user = User.objects.get(id=request.user.id)
         serializer = UserSerializer(user)
         response_load=serializer.data
-        profile = Profile.objects.get(user_id=request.user.id)
-        response_load['profile_id'] = Profile.objects.get(user_id=request.user.id).id
+        if (not user.is_staff):
+            response_load['profile_id'] = Profile.objects.get(user_id=request.user.id).id
 
         return Response(response_load)
 
