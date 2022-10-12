@@ -26,7 +26,7 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(required=False)
     last_name = serializers.CharField(required=False)
     email = serializers.EmailField(required=False)
-    password = serializers.CharField(required=True, write_only=True)
+    password = serializers.CharField(required=False, write_only=True)
 
     class Meta:
         model = User

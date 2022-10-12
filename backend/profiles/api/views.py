@@ -41,6 +41,7 @@ class updateProfileAPI(APIView):
             profileSerializer.save()
             return Response((profileSerializer.data, userProfileSerializer.data), status=status.HTTP_201_CREATED)
         elif (not userProfileSerializer.is_valid()):
+            print("debug")
             return Response(userProfileSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
         elif (not profileSerializer.is_valid()):
             return Response(profileSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
