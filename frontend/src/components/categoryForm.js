@@ -23,7 +23,7 @@ const CategoryForm = ({ state, handleChange, handleSave, error }) => {
           value={state?.description || ""}
         />
         {error && (
-          <Form.Text id={error.description} muted>
+          <Form.Text className="text-danger" id={error.description}>
             {error.description}
           </Form.Text>
         )}

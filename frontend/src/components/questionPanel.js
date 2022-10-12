@@ -19,7 +19,7 @@ const QuestionPanel = ({ question, handleChange, handleDelete, index }) => {
     choice_3: "",
   });
   const WORD = "word";
-  const CA = "correct_anwer";
+  const CA = "correct_answer";
   const C1 = "choice_1";
   const C2 = "choice_2";
   const C3 = "choice_3";
