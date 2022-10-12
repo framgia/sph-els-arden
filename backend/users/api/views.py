@@ -105,7 +105,8 @@ class ViewUsers(APIView):
             entry= {}
             user = User.objects.get(id=profile['user_id_id'])
             userSerialized = UserSerializer(user)
-            profile['avatar'] = avatarPrefix+profile['avatar']
+            if(profile['avatar'] != ""):
+                profile['avatar'] = avatarPrefix+profile['avatar']
             entry['profile'] = profile
             entry['user'] = userSerialized.data
             response_load[count] = entry

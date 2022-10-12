@@ -98,7 +98,7 @@ class QuizAnswer(APIView):
 
         if newAnswer.is_valid():
             newAnswer.save()
-            updateLessonProgress(request.data['lesson_id'])
+            updateLessonProgress(request.data['lesson_id'], request.user.id)
             if(correct):
                 addLearnedWord(request.user.id, question.word, answer)
             return Response(newAnswer.data, status=status.HTTP_201_CREATED)
@@ -111,7 +111,7 @@ class QuizAnswer(APIView):
             )
             if updateAnswer.is_valid():
                 updateAnswer.save()
-                updateLessonProgress(request.data['lesson_id'])
+                updateLessonProgress(request.data['lesson_id'], request.user.id)
                 if(correct):
                     addLearnedWord(request.user.id, question.word, answer)
                 return Response(updateAnswer.validated_data, status=status.HTTP_200_OK)
@@ -132,7 +132,7 @@ class QuizAnswer(APIView):
         return Response(response_load, status=status.HTTP_200_OK)
 
 
-def updateLessonProgress(id):
+def updateLessonProgress(id, user_id):
     lesson = Lesson.objects.get(id=id)
     category = Category.objects.get(id=lesson.category_id.id)
     totalQuestions = category.total_questions
@@ -140,13 +140,20 @@ def updateLessonProgress(id):
     allCorrectAnswer = Answer.objects.filter(lesson_id=id, correct=True).count()
     progress = float("{:.2f}".format(allCorrectAnswer/totalQuestions))
     lesson.progress = progress
-    lesson.completed = True if progress==1.0 else False
+    if(progress==1.0):
+        lesson.completed = True
+        profile = Profile.objects.get(user_id=user_id)
+        profile.total_lessons_learned +=1
+        profile.save()
     lesson.save()
 
 def addLearnedWord(id, word, answer):
     try:
         addWord = LearnedWordSerializer(data={'user_id': id,'word':word, 'answer':answer})
         if addWord.is_valid():
+            profile = Profile.objects.get(user_id=id)
+            profile.total_words_learned += 1
+            profile.save()
             addWord.save()
     except:
         return
