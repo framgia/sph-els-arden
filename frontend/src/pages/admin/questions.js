@@ -29,21 +29,19 @@ const AdminQuestions = () => {
     fetchData();
   }, []);
   return !loading ? (
-    <div>
+    <Container>
       <h1 className="text-capitalize">{location.state.title} Questions</h1>
-      <Container>
-        {Object.keys(questions).map((key) => (
-          <React.Fragment key={key}>
-            <QuestionPanel
-              question={questions[key]}
-              handleChange={handleChange}
-              handleDelete={handleDelete}
-              index={key}
-            />
-          </React.Fragment>
-        ))}
-      </Container>
-    </div>
+      {Object.keys(questions).map((key) => (
+        <React.Fragment key={key}>
+          <QuestionPanel
+            question={questions[key]}
+            handleChange={handleChange}
+            handleDelete={handleDelete}
+            index={key}
+          />
+        </React.Fragment>
+      ))}
+    </Container>
   ) : null;
 };
 

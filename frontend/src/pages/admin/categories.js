@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
@@ -57,7 +57,7 @@ const AdminCategories = () => {
       <Row>
         <Col>
           <h1>Admin | Categories</h1>
-          <div className="align-items-end">
+          <div className="mt-4 mb-4">
             <Button
               variant="success"
               onClick={() => navigate("/admin/category/add")}
@@ -68,9 +68,9 @@ const AdminCategories = () => {
           <Table striped bordered hover bgcolor="white">
             <thead className="text-center">
               <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Action</th>
+                <th className="col-md-2">Title</th>
+                <th className="col-md-9">Description</th>
+                <th className="col-md-auto">Action</th>
               </tr>
             </thead>
             <tbody>
