@@ -2,16 +2,15 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from django.db import IntegrityError
-from django.core.exceptions import ObjectDoesNotExist
 
 from admins.models import Category, Question
 from users.models import User
 from profiles.models import Profile
 from .serializers import CategorySerializer, QuestionSerializer
 from profiles.api.serializers import Profile
-from users.api.serializers import UserProfileSerializer, UserSerializer
+from users.api.serializers import UserSerializer
 
 class CategoriesTable(ListCreateAPIView):
     queryset = Category.objects.all()
@@ -29,14 +28,25 @@ class CreateQuestionAPI(APIView):
         serializer = QuestionSerializer(data=request.data)
         if serializer.is_valid():
             try:
+                question = Question.deleted_objects.get(word=request.data['word'])
+                if question:
+                    new_category = Category.objects.get(id=request.data['category_id'])
+                    question.category_id = new_category
+                    question.correct_answer = request.data['correct_answer']
+                    question.choice_1 = request.data['choice_1']
+                    question.choice_2 = request.data['choice_2']
+                    question.choice_3 = request.data['choice_3']
+                    question.save()
+                    category = Category.objects.get(id=request.data["category_id"])
+                    category.total_questions += 1
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
                 serializer.save()
                 category = Category.objects.get(id=request.data["category_id"])
                 category.total_questions += 1
                 category.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except IntegrityError:
-                Response({'error':'duplicate entry'},status=status.HTTP_400_BAD_REQUEST)
-
+                return Response({'error':'duplicate entry'},status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ViewUpdateDeleteQuestionAPI(APIView):
