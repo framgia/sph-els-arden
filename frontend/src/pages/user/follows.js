@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -8,34 +8,35 @@ import { useSearchParams } from "react-router-dom";
 import ProfileOverview from "../../components/profileOverview";
 import FollowsPanel from "../../components/followsPanel";
 import * as profileService from "../../services/profileService";
-import * as userService from "../../services/userService";
 import { setPage } from "../../store/follow";
+import { UserContext } from "../../utils/userContext";
 
 const Follows = () => {
+  const { user } = useContext(UserContext);
   const params = new URLSearchParams(window.location.search);
   const [, setSearchParams] = useSearchParams();
-  let tab;
 
   const pageState = useSelector((state) => state.followPage.value);
-  const profile = useSelector((state) => state.profile.value);
+  const [selectedProfile, setSelectedProfile] = useState();
   const dispatch = useDispatch();
 
+  const fetchData = async () => {
+    let tab;
+    try {
+      tab = params.get("tab");
+    } catch {}
+    if (!tab) tab = "followers";
+    const id = user.id;
+    const initialData = {};
+    const followers = await profileService.getFollowers(id);
+    initialData.followers = followers.data;
+    const followings = await profileService.getFollowings(id);
+    initialData.followings = followings.data;
+    setSearchParams({ tab: tab });
+    dispatch(setPage({ ...pageState, ...initialData, id, currentTab: tab }));
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        tab = params.get("tab");
-      } catch {}
-      if (!tab) tab = "followers";
-      const { data } = await userService.loggedInUser();
-      const { id } = data;
-      const initialData = {};
-      const response1 = await profileService.getFollowers(id);
-      initialData.followers = response1.data;
-      const response2 = await profileService.getFollowings(id);
-      initialData.followings = response2.data;
-      setSearchParams({ tab: tab });
-      dispatch(setPage({ ...pageState, ...initialData, id, currentTab: tab }));
-    };
     fetchData();
   }, []);
 
@@ -55,9 +56,19 @@ const Follows = () => {
     <Container fluid>
       <h1>Your Follows</h1>
       <Row>
-        <Col md={3}>{profile.user_id === "" ? null : <ProfileOverview />}</Col>
+        <Col md={3}>
+          {selectedProfile ? (
+            <ProfileOverview
+              user_id={selectedProfile.user_id}
+              refetch={fetchData}
+            />
+          ) : null}
+        </Col>
         <Col lg>
-          <FollowsPanel handleSwitchTab={handleSwitchTab} />
+          <FollowsPanel
+            handleSwitchTab={handleSwitchTab}
+            setProfile={setSelectedProfile}
+          />
         </Col>
       </Row>
     </Container>

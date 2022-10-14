@@ -53,22 +53,19 @@ const Dashboard = () => {
           <Row>
             <Col md="auto">
               <Image
-                src={
-                  (profile.profile.avatar && domain + profile.profile.avatar) ||
-                  avatarPlaceholder
-                }
+                src={`http://${profile.avatar}` || avatarPlaceholder}
                 style={{ width: "6rem" }}
               />
             </Col>
             <Col md="auto">
               <p className="text-capitalize fs-3">
-                {profile.user.first_name} {profile.user.last_name}
+                {profile.first_name} {profile.last_name}
               </p>
               <Link onClick={openWordsPanel}>
-                Learned {profile.profile.total_words_learned} words
+                Learned {profile.total_words_learned} words
               </Link>
               <br />
-              <p>Learned {profile.profile.total_lessons_learned} lessons</p>
+              <p>Learned {profile.total_lessons_learned} lessons</p>
             </Col>
           </Row>
         </Col>
