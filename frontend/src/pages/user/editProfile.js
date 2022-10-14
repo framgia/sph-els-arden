@@ -23,8 +23,7 @@ const EditProfile = () => {
     const fetchProfile = async () => {
       const { data } = await profileService.getCurrentProfile();
       const payload = {
-        ...data.profile,
-        ...data.user,
+        ...data,
         password: "",
         password2: "",
       };

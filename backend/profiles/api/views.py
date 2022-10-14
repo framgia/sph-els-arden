@@ -1,4 +1,5 @@
 from msilib.schema import AppId
+import profile
 from signal import valid_signals
 from urllib import response
 from rest_framework import status
@@ -7,6 +8,7 @@ from rest_framework.generics import ListCreateAPIView
 from rest_framework.response import Response
 from django.contrib.auth.hashers import check_password
 from rest_framework.permissions import AllowAny
+from sels.settings import MEDIA_URL
 
 from profiles.models import Profile, LearnedWord
 from users.models import User
@@ -41,7 +43,6 @@ class updateProfileAPI(APIView):
             profileSerializer.save()
             return Response((profileSerializer.data, userProfileSerializer.data), status=status.HTTP_201_CREATED)
         elif (not userProfileSerializer.is_valid()):
-            print("debug")
             return Response(userProfileSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
         elif (not profileSerializer.is_valid()):
             return Response(profileSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -66,33 +67,50 @@ class AvatarUploadAPI(APIView):
 
 class viewProfile(APIView):
     def get(self, request):
+        domain = request.META['HTTP_HOST']
         payload = getJWTPayload(request)
-        profile = NestedProfileSerializer(Profile.objects.get(user_id=payload['id']))
+        serializedProfile = ProfileSerializer(Profile.objects.get(user_id=payload['id']))
+        profile = serializedProfile.data
+        if(profile['avatar'] != ""):
+            profile['avatar'] = domain+serializedProfile.data['avatar']
         user = UserProfileSerializer(User.objects.get(id=payload['id']))
 
-        response_load = {
-            'profile': profile.data, 
-            'user': user.data
-        }
+        follower = Follow.objects.filter(following_id=serializedProfile.data['id']).count()
+        following = Follow.objects.filter(follower_id=serializedProfile.data['id']).count()
+
+        response_load = {**profile,  **user.data, 'follower': follower, 'following': following}
 
         return Response(response_load, status=status.HTTP_200_OK)
 
 class viewOtherProfile(APIView):
     def get(self, request, pk):
-        data = request.data
+        domain = request.META['HTTP_HOST']
+        isFollowing = False
+
         try:
-            profile = ProfileSerializer(Profile.objects.get(user_id=pk))
+            viewerProfile = Profile.objects.get(user_id=request.user.id)
+            viewingProfile = Profile.objects.get(user_id=pk)
+            serializedProfile = ProfileSerializer(viewingProfile)
+            profile = serializedProfile.data
+            if(profile['avatar'] != "" and profile['avatar'] is not None):
+                profile['avatar'] = domain+serializedProfile.data['avatar']
             user = UserProfileSerializer(User.objects.get(id=pk))
+
+            follower = Follow.objects.filter(following_id=serializedProfile.data['id']).count()
+            following = Follow.objects.filter(follower_id=serializedProfile.data['id']).count()
+            
+            try:
+                followObj = Follow.objects.get(follower_id=viewerProfile.id, following_id=viewingProfile.id)
+                isFollowing = True
+            except Follow.DoesNotExist:
+                isFollowing = False
 
         except Profile.DoesNotExist or User.DoesNotExist:
             return Response({'message': "this profile does not exist"}, status=status.HTTP_400_BAD_REQUEST)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
-        response_load = {
-            'profile': profile.data, 
-            'user': user.data
-        }
+        response_load = {**profile,  **user.data, 'follower': follower, 'following': following, 'follow': isFollowing}
 
         return Response(response_load, status=status.HTTP_200_OK)
 

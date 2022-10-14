@@ -39,6 +39,7 @@ class CreateQuestionAPI(APIView):
                     question.save()
                     category = Category.objects.get(id=request.data["category_id"])
                     category.total_questions += 1
+                    category.save()
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
                 serializer.save()
                 category = Category.objects.get(id=request.data["category_id"])
